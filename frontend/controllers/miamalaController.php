@@ -5,6 +5,7 @@ use frontend\models\MiamalaaForm;
 use yii;
 class MiamalaController extends Controller
 {
+	 // public $layout='miamalaLayout';
 // public $layout='miamalaLayout';
 public function actionHome()
 {

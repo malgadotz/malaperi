@@ -47,7 +47,8 @@ AppAsset::register($this);
     ?>
 
 </header>
-
+<?php 
+if ('john') {?>
 <div class="dashboard side-navbar navbar-dark bg-dark comic">
 <!-- <div class="card"> -->
   <div style="background:#357CA5;opacity: ;padding: 14px 3px;color:white;font-size: 15pt;text-align: center;text-shadow: 1px 1px 11px black">
@@ -89,6 +90,9 @@ AppAsset::register($this);
     </div>
 <!-- </div> -->
 </div>
+
+<?php }?>
+
 <div class="marginLeft">
 
 <main role="main" class="flex-shrink-0 mauto">
