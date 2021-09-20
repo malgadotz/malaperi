@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 use yii\web\Controller;
 use frontend\models\MiamalaaForm;
+use frontend\models\Users;
 use yii;
 class MiamalaController extends Controller
 {
@@ -10,7 +11,25 @@ class MiamalaController extends Controller
 public function actionHome()
 {
 	
-	return $this->render('login');
+	$session =Yii::$app->session;
+	if(isset($session['login']))
+	{
+	
+		
+	return $this->render('index');
+
+        // $ngo = Ngo::find()->all();
+        // $requests = Requests::find()->all();
+        // $imgs = RequestImages::find()->all();
+        // $donn = Donations::find()->all();
+	// return $this->render('login', ['model'=>$model]);
+}
+else{
+	$model = new Users();
+	return $this->render('login', [
+		'model' => $model,
+	]);
+}
 }
 public function actionPayments()
 {
@@ -88,7 +107,29 @@ public function actionManageCat()
 	$model=new MiamalaaForm();
 	return $this->render('managecat', ['model'=>$model]);
 }
+public function actionLogin()
+    {
+		$model = new Users();
+		if ($model->load(Yii::$app->request->post()))
+		{
+			$session =Yii::$app->session;
+			$session['login']='name';
+			$session->open();	
+		return $this->render('index');
+			Yii::$app->getSession()->setFlash('message','Post published successfully');
 
-
+	   }// $user= new UserForm();
+		// if($user->email === $this->email && $user->password === $this->password)
+		// {
+		// 	return $this->render('profile');
+		// }
+		// else{
+		// 	return $this->render('login');
+		// }
+    // $model->password = '';
+       return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
 }
 ?>

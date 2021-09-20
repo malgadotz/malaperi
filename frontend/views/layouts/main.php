@@ -85,7 +85,7 @@ if ('john') {?>
         <li><i class="fa fa-user-plus fa-fw text-warning"></i> <?= Html:: a("Register New User",['/miamala/add-user'],['class' => 'btn btn-primary half-5']) ?></li>
        <li><i class="fa fa-user-circle-o fa-fw text-gado"></i> <?= Html:: a("Profile Settings",['/miamala/profile'],['class' => 'btn btn-primary half-5']) ?></li>
         <li><i class="fa fa-lock fa-fw text-info"></i> <?= Html:: a("Account Settings",['/miamala/account'],['class' => 'btn btn-primary half-5']) ?></li>
-        <li><i class="fa fa-sign-out fa-fw text-white"></i> <?= Html:: a("Sign Out",['/miamala/profile'],['class' => 'btn btn-primary half-5']) ?></li>
+        <li><i class="fa fa-sign-out fa-fw text-white"></i> <?= Html:: a("Sign Out",['/miamala/login'],['class' => 'btn btn-primary half-5']) ?></li>
       </ul>
     </div>
 <!-- </div> -->

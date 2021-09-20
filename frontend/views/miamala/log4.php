@@ -19,14 +19,10 @@ use yii;
 
 
 
-    <?php $form = ActiveForm::begin([
-'method'=>'post',
-'id'=>'login'
-
-]); ?>
+    <?php $form = ActiveForm::begin(['id' => 'login']); ?>
 
     <div class="form-group ">
-<?= $form->field($model, 'email')->textInput( ['class' => 'form-control']) ?>
+<?= $form->field($model, 'username')->textInput( ['class' => 'form-control']) ?>
 <!-- <span class="fa fa-envelope form-control-feedback"></span></div> -->
 <div class="form-group ">
 <?= $form->field($model, 'password')->passwordInput( ['class' => 'form-control']) ?>

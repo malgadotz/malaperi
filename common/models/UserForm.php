@@ -17,6 +17,8 @@ use Yii;
  */
 class UserForm extends \yii\db\ActiveRecord
 {
+    public $email;
+    public $password;
     /**
      * {@inheritdoc}
      */

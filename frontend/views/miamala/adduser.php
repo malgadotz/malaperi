@@ -9,8 +9,7 @@ $url1=Yii::$app->homeUrl;
 
 
 $form=ActiveForm::begin([
-'method'=>'post',
-'action'=>'/miamala/add-user'
+'id' => 'profile'
 
 ])
    ?>  
