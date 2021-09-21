@@ -55,4 +55,15 @@ class UserForm extends \yii\db\ActiveRecord
             'date' => 'Date',
         ];
     }
+
+
+
+    public function getUser()
+    {
+        if ($this->_users === null) {
+            $this->_users = Users::findByEmail($this->username);
+        }
+
+        return $this->_users;
+    }
 }

@@ -29,7 +29,7 @@ AppAsset::register($this);
 <header>
     <?php
     NavBar::begin([
-               'brandLabel'=> Yii::$app->name,
+               'brandLabel'=>'MEDICAL STORE',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                 'class' => 'navbar navbar-static-top navbar-light text-white bg-info fixed-top',

@@ -3,33 +3,76 @@ namespace frontend\controllers;
 use yii\web\Controller;
 use frontend\models\MiamalaaForm;
 use frontend\models\Users;
-use yii;
+use common\models\LoginForm;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\web\Response;
+use Yii;
 class MiamalaController extends Controller
 {
-	 // public $layout='miamalaLayout';
+	// public function behaviors()
+    // {
+    //     return [
+    //         'access' => [
+    //             'class' => AccessControl::className(),
+    //             'rules' => [
+    //                 [
+    //                     'actions' => ['login', 'profile'],
+    //                     'allow' => true,
+    //                 ],
+    //                 [
+    //                     'actions' => ['logout', ''],
+    //                     'allow' => true,
+    //                     'roles' => ['@'],
+    //                 ],
+    //             ],
+    //         ],
+    //         'verbs' => [
+    //             'class' => VerbFilter::className(),
+    //             'actions' => [
+    //                 // 'logout' => ['post'],
+    //             ],
+    //         ],
+    //     ];
+    // }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
+
 // public $layout='miamalaLayout';
 public function actionHome()
 {
 	
-	$session =Yii::$app->session;
-	if(isset($session['login']))
-	{
-	
+// 	$session =Yii::$app->session;
+// 	$session['login']='name';
+// 	if(isset($session['login']))
+// 	{
+// 	 $layout = 'blank';
 		
-	return $this->render('index');
+// 	return $this->render('index');
 
-        // $ngo = Ngo::find()->all();
-        // $requests = Requests::find()->all();
-        // $imgs = RequestImages::find()->all();
-        // $donn = Donations::find()->all();
-	// return $this->render('login', ['model'=>$model]);
-}
-else{
-	$model = new Users();
-	return $this->render('login', [
-		'model' => $model,
-	]);
-}
+//         // $ngo = Ngo::find()->all();
+//         // $requests = Requests::find()->all();
+//         // $imgs = RequestImages::find()->all();
+//         // $donn = Donations::find()->all();
+// 	// return $this->render('login', ['model'=>$model]);
+// }
+// else{
+// 	$model = new Users();
+// 	return $this->render('/login/index', [
+// 		'model' => $model,
+// 	]);
+// }
+return $this->render('index');
 }
 public function actionPayments()
 {
@@ -109,27 +152,46 @@ public function actionManageCat()
 }
 public function actionLogin()
     {
-		$model = new Users();
-		if ($model->load(Yii::$app->request->post()))
-		{
-			$session =Yii::$app->session;
-			$session['login']='name';
-			$session->open();	
-		return $this->render('index');
-			Yii::$app->getSession()->setFlash('message','Post published successfully');
+		
+        // if (!Yii::$app->user->isGuest) {
+        //     return $this->goHome();
+        // }
 
-	   }// $user= new UserForm();
-		// if($user->email === $this->email && $user->password === $this->password)
-		// {
-		// 	return $this->render('profile');
-		// }
-		// else{
-		// 	return $this->render('login');
-		// }
-    // $model->password = '';
-       return $this->render('login', [
+        $this->layout = 'blank';
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            
+			
+			//admin
+			// $model->getUser();
+
+			//saler
+			
+			$this->layout = 'main';
+			return $this->render('index');
+        }
+
+        $model->password = '';
+		
+
+        return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+
+
+
+    public function actionLogout()
+    {
+        // Yii::$app->user->logout();
+		// $this->layout = 'blank';
+        // return $this->goHome();
+		// $model = new LoginForm();
+		// return $this->render('login', [
+        //     'model' => $model,
+        // ]);
     }
 }
 ?>

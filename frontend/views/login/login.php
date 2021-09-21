@@ -26,7 +26,7 @@ use yii;
 ]); ?>
 
     <div class="form-group ">
-<?= $form->field($model, 'username')->textInput( ['class' => 'form-control']) ?>
+<?= $form->field($model, 'email')->textInput( ['class' => 'form-control']) ?>
 <!-- <span class="fa fa-envelope form-control-feedback"></span></div> -->
     </div>
     <div class="form-group ">
