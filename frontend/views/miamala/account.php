@@ -3,13 +3,13 @@ namespace frontend\controllers;
 use yii\base\Model;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
-use common\models\MiamalaForm;
+use common\models\User;
 use yii;
 
 $url1=yii::$app->homeUrl;
 $form=ActiveForm::begin([
 'method'=>'post',
-'action'=>'/miamala/profile'
+'action'=>'/miamala/account'
 
 ])
    ?>  
@@ -22,17 +22,14 @@ $form=ActiveForm::begin([
     <h3 class="text-center btn-block"><i class="fa fa-user fa-lg text-white">Update User-Account Informations</i></h3>
     </div>
     <div class="card-body">
-     <?= $form->field($model, 'details')->textarea(['rows' => 6]) ?>
+     
 
-                <?= $form->field($model, 'context') ?>
+     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-                <?= $form->field($model, 'amount') ?>
-
-                  
-<?= $form->field($model, 'date') ?>
+<?= $form->field($model, 'password')->passwordInput() ?>                
               
                 <div class="form-group">
-                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>
+                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'contact-button']) ?>
                 </div>
 
             <?php ActiveForm::end(); ?>

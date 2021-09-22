@@ -16,24 +16,23 @@ $form=ActiveForm::begin([
    <div class="content">
        <ol class="breadcrumb ">
         <li><a href=<?=$url1;?>><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Register New User</li>
+        <li class="active">Register New Seller</li>
     </ol>
    <div class="card  mauto half">
     <div class="card-header bg-primary">
-    <h3 class="text-center btn-block"><i class="fa fa-users fa-lg text-white">Register New User-Account</i></h3>
+    <h3 class="text-center btn-block"><i class="fa fa-user-plus text-white"></i> Register New Seller</h3>
     </div>
     <div class="card-body">
-     <?= $form->field($model, 'details')->textarea(['rows' => 6]) ?>
+    
+    <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-                <?= $form->field($model, 'context') ?>
+<?= $form->field($model, 'email') ?>
 
-                <?= $form->field($model, 'amount') ?>
+<?= $form->field($model, 'password')->passwordInput() ?>
 
-                  
-<?= $form->field($model, 'date') ?>
               
                 <div class="form-group">
-                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>
+                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat '  , 'name' => 'contact-button']) ?>
                 </div>
 
             <?php ActiveForm::end(); ?>

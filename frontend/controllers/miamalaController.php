@@ -4,8 +4,10 @@ use yii\web\Controller;
 use frontend\models\MiamalaaForm;
 use frontend\models\Users;
 use common\models\LoginForm;
+use common\models\User;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use frontend\models\SignupForm;
 use yii\web\Response;
 use Yii;
 class MiamalaController extends Controller
@@ -17,20 +19,23 @@ class MiamalaController extends Controller
     //             'class' => AccessControl::className(),
     //             'rules' => [
     //                 [
-    //                     'actions' => ['login', 'profile'],
+    //                     'actions' => ['index','login','add-user','inventeries','profile','reports','account'],
     //                     'allow' => true,
     //                 ],
+
+    //                 //rule2
     //                 [
-    //                     'actions' => ['logout', ''],
+    //                     'actions' => ['logout', 'login'],
     //                     'allow' => true,
     //                     'roles' => ['@'],
     //                 ],
+    //                 //rule3
     //             ],
     //         ],
     //         'verbs' => [
     //             'class' => VerbFilter::className(),
     //             'actions' => [
-    //                 // 'logout' => ['post'],
+    //                 'logout' => ['post'],
     //             ],
     //         ],
     //     ];
@@ -47,6 +52,7 @@ class MiamalaController extends Controller
             ],
         ];
     }
+    
 
 // public $layout='miamalaLayout';
 public function actionHome()
@@ -124,7 +130,7 @@ public function actionProfile()
 
 public function actionAccount()
 {
-	$model=new MiamalaaForm();
+	$model=new User();
 	return $this->render('account', ['model'=>$model]);
 }
 
@@ -136,8 +142,19 @@ public function actionInventeries()
 
 public function actionAddUser()
 {
-	$model=new MiamalaaForm();
-	return $this->render('adduser', ['model'=>$model]);
+    $model = new SignupForm();
+    if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+        Yii::$app->session->setFlash('success', 'User has been Added Successfully');
+
+            // $seller = new Seller();
+            // $userss = new User();
+            // $seller->log_id=$userss->getId($model->username);            
+        return $this->goHome();
+    }
+
+    return $this->render('adduser', [
+        'model' => $model,
+    ]);
 }
 public function actionReports()
 {
@@ -166,8 +183,7 @@ public function actionLogin()
 			//admin
 			// $model->getUser();
 
-			//saler
-			
+			//saler	
 			$this->layout = 'main';
 			return $this->render('index');
         }
@@ -185,9 +201,9 @@ public function actionLogin()
 
     public function actionLogout()
     {
-        // Yii::$app->user->logout();
+        Yii::$app->user->logout();
 		// $this->layout = 'blank';
-        // return $this->goHome();
+        return $this->goHome();
 		// $model = new LoginForm();
 		// return $this->render('login', [
         //     'model' => $model,

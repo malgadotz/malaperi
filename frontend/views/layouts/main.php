@@ -39,10 +39,10 @@ AppAsset::register($this);
 
 
    
-     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav text-center'],
+    //  echo Nav::widget([
+    //     'options' => ['class' => 'navbar-nav text-center'],
         
-    ]);
+    // ]);
     NavBar::end();
     ?>
 
