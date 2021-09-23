@@ -70,7 +70,7 @@ if ('john') {?>
       <ul class="nostyle zero">
         <li style="color: white"><i class="fa fa-home fa-fw text-primary"></i> <?= Html:: a("Home", Yii::$app->homeUrl,['class' => 'btn btn-primary half-5']) ?></li>
 
-        <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Inventeries",['/miamala/inventeries'],['class' => 'btn btn-primary half-5']) ?></li>
+        <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Drugs",['/miamala/drugs'],['class' => 'btn btn-primary half-5']) ?></li>
 
        <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Item",['/miamala/profile'],['class' => 'btn btn-primary half-5']) ?></li>
 <!--         <a href="newsell"><li><i class="fa fa-circle-o fa-fw"></i> New Sell</li></a> -->

@@ -10,8 +10,8 @@ use yii;
 
 	<div class="login-box">
 
-  	<div class="well well-sm center" style="width: 45%;margin: auto;padding:4px 11px;margin-top: 111px;text-align: center;">
-  		<h3 class="center">Login</h3>
+  	<div class="well well-sm center bg-dark" style="width: 45%;margin: auto;padding:4px 11px;margin-top: 111px;text-align: center;">
+  		<h3 class="center text-white">MEDICAL STORE MANAGEMENT SYSTEM </h3>
   	</div>
   <!-- /.login-logo -->
   <div class="well well-sm" style="width: 45%;margin:auto;padding: 22px;margin-top: 22px;z-index: 6">

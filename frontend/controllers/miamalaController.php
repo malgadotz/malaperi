@@ -8,7 +8,9 @@ use common\models\User;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use frontend\models\SignupForm;
+use frontend\models\Categories;
 use yii\web\Response;
+use yii\web\UploadedFile;
 use Yii;
 class MiamalaController extends Controller
 {
@@ -134,10 +136,10 @@ public function actionAccount()
 	return $this->render('account', ['model'=>$model]);
 }
 
-public function actionInventeries()
+public function actionDrugs()
 {
 	$model=new MiamalaaForm();
-	return $this->render('inventeries', ['model'=>$model]);
+	return $this->render('drugs', ['model'=>$model]);
 }
 
 public function actionAddUser()
@@ -166,6 +168,31 @@ public function actionManageCat()
 {
 	$model=new MiamalaaForm();
 	return $this->render('managecat', ['model'=>$model]);
+}
+public function actionAddCat()
+{
+	$model=new Categories();
+
+    if($model->load(Yii::$app->request->post()))
+    {
+        
+        $model->image=UploadedFile::getInstance($model, 'image');
+        $imageName = $model-> cat_name.'.'.$model->image->getExtension();
+        $imagepath= 'img/'.$imageName;
+        $model->image->saveAs($imagepath);
+
+        
+      
+        $model->save();
+        Yii::$app->session->setFlash('success', 'Drug Category been Added Successfully');
+    }
+    else
+    {
+        return $this->render('addcategory', ['model'=>$model]);
+    }
+
+
+	
 }
 public function actionLogin()
     {

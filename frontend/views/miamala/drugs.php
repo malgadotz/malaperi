@@ -5,7 +5,7 @@ use yii\helpers\Html;
  <div class="content">
    <ol class="breadcrumb ">
         <li><a href=<?=Yii::$app->homeUrl;?>><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Inventories</li>
+        <li class="active">Drugs</li>
     </ol>
   <div class="tableBox" >
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">

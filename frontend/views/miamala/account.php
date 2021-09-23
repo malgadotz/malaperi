@@ -24,15 +24,15 @@ $form=ActiveForm::begin([
     <div class="card-body">
      
 
-     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-<?= $form->field($model, 'password')->passwordInput() ?>                
+        <?= $form->field($model, 'password')->passwordInput() ?>                
               
-                <div class="form-group">
-                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'contact-button']) ?>
-                </div>
+        <div class="form-group">
+            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'contact-button']) ?>
+        </div>
 
-            <?php ActiveForm::end(); ?>
-            </div>
-            </div>
-        
+        <?php ActiveForm::end(); ?>
+    </div>
+</div>
+     
