@@ -14,7 +14,7 @@ use yii\helpers\Html;
 
 
       <span style="font-size: 16pt;color: #333333">Categories </span>
-      <button class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#addIn" style="margin-left: 2px;"><i class="fa fa-plus fa-fw"> </i>Add New Category</button>
+      <button class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#addIn" style="margin-left: 2px;"><i class="fa fa-plus fa-fw"> </i><?= Html:: a("Add New Category",['/miamala/add-cat'],['class' => 'nostyle text-white']) ?></button>
 
     </div><div class="tableBox " >
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">
@@ -25,10 +25,21 @@ use yii\helpers\Html;
         <th>Action</th>
       </thead>
      <tbody>
+     <?php 
+     $i=1;
+     foreach($model as $model): ?>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><?php echo $i++;?></td>
+            <td><?php echo $model->cat_name;?></td>
+            <td> <?php $sum=0;
+       foreach($drug as $drugs): ?>
+              <?php if($model->cat_id == $drugs->cat_id):  
+              $sum=$sum+1;
+              ?>
+              <?php endif; ?>
+              <?php endforeach; ?>  
+              <?php echo $sum;?>
+            </td>
             <td>
               <i class="fa fa-edit fa-lg text-primary"></i>
               <?= Html:: a("update",['/miamala/maage-cat'],['class' => 'btn btn-success btn-xs']) ?>
@@ -36,6 +47,7 @@ use yii\helpers\Html;
               <?= Html:: a("Delete",['/miamala/manage-cat'],['class' => 'btn btn-danger btn-xs']) ?>
             </td>
           </tr>      
+          <?php endforeach; ?>  
      </tbody>
     </table>
   </div>

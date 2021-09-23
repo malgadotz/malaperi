@@ -2,13 +2,18 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
+namespace frontend\controllers;
+use yii\base\Model;
 use common\widgets\Alert;
+use common\models\User;
+use common\models\Admin;
 use frontend\assets\AppAsset;
 use yii\bootstrap4\Breadcrumbs;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
+use yii\helpers\ArrayHelper;
 use yii\bootstrap4\NavBar;
+use yii;
 
 
 AppAsset::register($this);
@@ -55,12 +60,11 @@ if ('john') {?>
     <a href="index.php" style="color: white;text-decoration: none;"><?=Yii::$app->name; ?> </a>
   </div>
   <div class="flex" style="padding: 3px 7px;margin:5px 2px;">
-    <div><img src="/img/malgado.jpg" class='img-circle' style='width: 77px;height: 66px'></div>
-    <div style="color:lightgreen;font-size: 13pt;padding: 14px 7px;margin-left: 11px;">MalgadoTZ
-        <?php
-         // echo ucfirst($user['name']); 
-         ?>
-            
+    <div>
+      <img src="/photo/<?php echo Admin::findone(['log_id'=>\Yii::$app->user->identity->id])->pic;?>
+" class='img-circle' style='width: 77px;height: 66px'></div>
+    <div style="color:lightgreen;font-size: 13pt;padding: 14px 7px;margin-left: 11px;">
+    <?=Yii::$app->user->identity->username ?>
         </div>
   </div>
   <div class="bt-block" style="background: #1A2226;font-size: 10pt;padding: 11px;color: #79978F">MAIN NAVIGATION</div>
@@ -72,7 +76,7 @@ if ('john') {?>
 
         <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Drugs",['/miamala/drugs'],['class' => 'btn btn-primary half-5']) ?></li>
 
-       <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Item",['/miamala/profile'],['class' => 'btn btn-primary half-5']) ?></li>
+       <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Item",['/miamala/add-drug'],['class' => 'btn btn-primary half-5']) ?></li>
 <!--         <a href="newsell"><li><i class="fa fa-circle-o fa-fw"></i> New Sell</li></a> -->
         <li><i class="fa fa-folder-open fa-fw text-success"></i> <?= Html:: a("Report",['/miamala/reports'],['class' => 'btn btn-primary half-5']) ?></li>
       </ul>
