@@ -1,18 +1,13 @@
 <?php
-namespace frontend\controllers;
-use yii\base\Model;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
-use frontend\models\Categories;
-use yii;
+
 $url1=Yii::$app->homeUrl;
-
-
 
 $form = ActiveForm::begin([
     'id' => 'active-form',
     'options' => [
-		'class' => 'form-horizontal',
+		'class' => '',
 		'enctype' => 'multipart/form-data'
 	],
 ])?>
@@ -30,7 +25,7 @@ $form = ActiveForm::begin([
     
     <?= $form->field($model, 'cat_name')->textInput(['autofocus' => true])?>
 
-<?= $form->field($model, 'image')->fileInput(['label'=>'Picture'])?>
+<?= $form->field($model, 'cat_pict')->fileInput()?>
                 <div class="form-group">
                     <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat '  , 'name' => 'contact-button']) ?>
                 </div>

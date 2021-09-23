@@ -3,12 +3,18 @@ namespace frontend\controllers;
 use yii\web\Controller;
 use frontend\models\MiamalaaForm;
 use frontend\models\Users;
+use frontend\models\Drugs;
+use frontend\models\SignupForm;
 use common\models\LoginForm;
 use common\models\User;
+use common\models\Sales;
+use common\models\Admin;
+use common\models\Categories;
+use common\models\Drugss;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use frontend\models\SignupForm;
-use frontend\models\Categories;
+
+
 use yii\web\Response;
 use yii\web\UploadedFile;
 use Yii;
@@ -68,8 +74,10 @@ public function actionHome()
 		
 // 	return $this->render('index');
 
-//         // $ngo = Ngo::find()->all();
-//         // $requests = Requests::find()->all();
+        $models = Categories::find()->all();
+        $usernow=User::findone(['id'=> yii::$app->user->getId()]);
+        $admin = Admin::findone(['log_id'=> yii::$app->user->getId()]);;
+        $drug = Drugs::find()->all();
 //         // $imgs = RequestImages::find()->all();
 //         // $donn = Donations::find()->all();
 // 	// return $this->render('login', ['model'=>$model]);
@@ -80,7 +88,7 @@ public function actionHome()
 // 		'model' => $model,
 // 	]);
 // }
-return $this->render('index');
+return $this->render('index', ['models' => $models, 'drug' => $drug, 'admin'=>$admin,'usernow'=>$usernow]);
 }
 public function actionPayments()
 {
@@ -138,8 +146,10 @@ public function actionAccount()
 
 public function actionDrugs()
 {
-	$model=new MiamalaaForm();
-	return $this->render('drugs', ['model'=>$model]);
+	$model=Drugs::find()->all();
+    $admin=Admin::find()->all();
+    $usernow=User::findone(['id'=> yii::$app->user->getId()]);
+	return $this->render('drugs', ['model'=>$model, 'admin'=>$admin, 'usernow'=>$usernow]);
 }
 
 public function actionAddUser()
@@ -158,41 +168,79 @@ public function actionAddUser()
         'model' => $model,
     ]);
 }
+
+
+public function actionAddDrug()
+{
+    $model = new Drugs();
+    $category = Categories::find()->all();
+    
+    if ($model->load(Yii::$app->request->post())) 
+    {
+        // $model->getData();
+        $model->user_id=yii::$app->user->getId();
+        $model->save();
+        // $model->cat_idgetCat()
+        Yii::$app->session->setFlash('success', 'Drug has been Added Successfully');                 
+        return $this->goHome();
+    }
+
+    return $this->render('adddrug', [
+        'model' => $model, 'category'=>$category,
+    ]);
+}
+
+
+
+public function actionDeletedrug($inv_id)
+{
+if($model = Drugs::findone($inv_id)->delete())
+{
+    Yii::$app->session->setFlash('success', 'Drug Deleted Successfully');
+    return $this->goHome();
+}
+
+}
+
+
+
 public function actionReports()
 {
-	$model=new MiamalaaForm();
-	return $this->render('reports', ['model'=>$model]);
+	$report=new Sales();
+	return $this->render('reports', ['report'=>$report]);
 }
 
 public function actionManageCat()
 {
-	$model=new MiamalaaForm();
-	return $this->render('managecat', ['model'=>$model]);
+	$model = Categories::find()->all();
+    $drug = Drugs::find()->all();
+	return $this->render('managecat', ['model'=>$model, 'drug'=>$drug]);
 }
 public function actionAddCat()
 {
 	$model=new Categories();
-
+    // return $this->render('addcategory', ['model'=>$model]);
     if($model->load(Yii::$app->request->post()))
     {
-        
-        $model->image=UploadedFile::getInstance($model, 'image');
-        $imageName = $model-> cat_name.'.'.$model->image->getExtension();
-        $imagepath= 'img/'.$imageName;
-        $model->image->saveAs($imagepath);
-
-        
-      
+        $model->user_id=yii::$app->user->getId();
+        $model->cat_pic='gado.jpg';
+        $model->cat_name='Name';
         $model->save();
-        Yii::$app->session->setFlash('success', 'Drug Category been Added Successfully');
+        // User::getId();
+        // =yii::$app->user->getId();
+        // $model->cat_pict = UploadedFile::getInstance($model, 'cat_pict');
+        // $modelName=$model->cat_name;
+        //     $model->cat_pict->saveAs('uploads/' . $model->cat_pict->baseName . '.' . $model->cat_pict->extension);
+        //  $model->cat_pic='uploads/' . $model->cat_pict->baseName . '.' . $model->cat_pict->extension;
+          
+            Yii::$app->session->setFlash('success', 'Drug Category been Added Successfully');
+            return $this->goHome();
+        
     }
     else
     {
         return $this->render('addcategory', ['model'=>$model]);
-    }
-
-
-	
+    }	
 }
 public function actionLogin()
     {
@@ -202,7 +250,7 @@ public function actionLogin()
         // }
 
         $this->layout = 'blank';
-
+        $models = Categories::find()->all();
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             
@@ -219,7 +267,7 @@ public function actionLogin()
 		
 
         return $this->render('login', [
-            'model' => $model,
+            'model' => $model,'models' => $models,
         ]);
     }
 
@@ -235,6 +283,39 @@ public function actionLogin()
 		// return $this->render('login', [
         //     'model' => $model,
         // ]);
+    }
+
+
+    public function actionUpload(){
+
+        $model = new Images();
+        $uploadPath = Yii::getAlias('@root') .'/uploads/';
+    
+        if (isset($_FILES['image'])) {
+            $file = \yii\web\UploadedFile::getInstanceByName('image');
+          $original_name = $file->baseName;  
+          $newFileName = \Yii::$app->security
+                            ->generateRandomString().'.'.$file->extension;
+           // you can write save code here before uploading.
+            if ($file->saveAs($uploadPath . '/' . $newFileName)) {
+                $model->image = $newFileName;
+                $model->original_name = $original_name;
+                if($model->save(false)){
+                    echo \yii\helpers\Json::encode($file);
+                }
+                else{
+                    echo \yii\helpers\Json::encode($model->getErrors());
+                }
+    
+            }
+        }
+        else {
+            return $this->render('upload', [
+                'model' => $model,
+            ]);
+        }
+    
+        return false;
     }
 }
 ?>

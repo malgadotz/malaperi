@@ -11,7 +11,7 @@ use yii\helpers\Html;
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">
       <thead>
         <th>#</th>
-        <th>Name Of Product/th>
+        <th>Name Of Product</th>
         <th>quantity Purchased</th>
         <th>Amount Payed</th>
         <th>Transaction By:</th>
@@ -20,22 +20,24 @@ use yii\helpers\Html;
 
       </thead>
      <tbody>
-      
-       
+     <?php 
+     $i=0;
+     foreach($report as $report): ?>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><?php echo $i+1;?></td>
+            <td>
+            
+            <!-- //  echo $report->product; -->
+             
+     </td>
+            
              <td colspan="center"><i class="fa fa-edit fa-lg text-primary"></i><?= Html:: a("update",['/miamala/profile'],['class' => 'btn btn-success btn-xs']) ?>
 
               <i class="fa fa-print fa-lg text-dark"></i><?= Html:: a("print",['/miamala/profile'],['class' => 'btn btn-info btn-xs']) ?>
 
             </td>
           </tr>
-      
+          <?php endforeach; ?>  
      </tbody>
     </table>
   </div>
