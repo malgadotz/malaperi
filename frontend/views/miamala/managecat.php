@@ -42,9 +42,9 @@ use yii\helpers\Html;
             </td>
             <td>
               <i class="fa fa-edit fa-lg text-primary"></i>
-              <?= Html:: a("update",['/miamala/maage-cat'],['class' => 'btn btn-success btn-xs']) ?>
+              <?= Html:: a("update",['/miamala/manage-cat'],['class' => 'btn btn-success btn-xs']) ?>
               <i class="fa fa-trash fa-lg text-dark"></i>
-              <?= Html:: a("Delete",['/miamala/manage-cat'],['class' => 'btn btn-danger btn-xs']) ?>
+              <?= Html:: a("Delete",['/miamala/delete-cat', 'cat_id'=>$model->cat_id],['class' => 'btn btn-danger btn-xs']) ?>
             </td>
           </tr>      
           <?php endforeach; ?>  
