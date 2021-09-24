@@ -21,8 +21,9 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $password 
  */
+// write-only password
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;

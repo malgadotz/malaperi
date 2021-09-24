@@ -25,7 +25,7 @@ $form = ActiveForm::begin([
     
     <?= $form->field($model, 'cat_name')->textInput(['autofocus' => true])?>
 
-<?= $form->field($model, 'cat_pict')->fileInput()?>
+<?= $form->field($model, 'cat_pic')->fileInput()?>
                 <div class="form-group">
                     <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat '  , 'name' => 'contact-button']) ?>
                 </div>

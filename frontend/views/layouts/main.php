@@ -76,7 +76,7 @@ if ('john') {?>
 
         <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Drugs",['/miamala/drugs'],['class' => 'btn btn-primary half-5']) ?></li>
 
-       <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Item",['/miamala/add-drug'],['class' => 'btn btn-primary half-5']) ?></li>
+       <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Drug",['/miamala/add-drug'],['class' => 'btn btn-primary half-5']) ?></li>
 <!--         <a href="newsell"><li><i class="fa fa-circle-o fa-fw"></i> New Sell</li></a> -->
         <li><i class="fa fa-folder-open fa-fw text-success"></i> <?= Html:: a("Report",['/miamala/reports'],['class' => 'btn btn-primary half-5']) ?></li>
       </ul>
@@ -86,7 +86,7 @@ if ('john') {?>
   <div class="item">
       <ul class="nostyle zero">
 
-        <li><i class="fa fa-user-plus fa-fw text-warning"></i> <?= Html:: a("Register New User",['/miamala/add-user'],['class' => 'btn btn-primary half-5']) ?></li>
+        <li><i class="fa fa-user-plus fa-fw text-warning"></i> <?= Html:: a("Register New Seller",['/miamala/add-user'],['class' => 'btn btn-primary half-5']) ?></li>
        <li><i class="fa fa-user-circle-o fa-fw text-gado"></i> <?= Html:: a("Profile Settings",['/miamala/profile'],['class' => 'btn btn-primary half-5']) ?></li>
         <li><i class="fa fa-lock fa-fw text-info"></i> <?= Html:: a("Account Settings",['/miamala/account'],['class' => 'btn btn-primary half-5']) ?></li>
         <li><i class="fa fa-sign-out fa-fw text-white"></i> <?= Html:: a("Sign Out",['/miamala/login'],['class' => 'btn btn-primary half-5']) ?></li>

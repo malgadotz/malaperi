@@ -7,9 +7,11 @@ use frontend\models\Drugs;
 use frontend\models\SignupForm;
 use common\models\LoginForm;
 use common\models\User;
+use common\models\Seller;
 use common\models\Sales;
 use common\models\Admin;
-use common\models\Categories;
+use frontend\models\Categories;
+// use common\models\Categories;
 use common\models\Drugss;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -155,7 +157,13 @@ public function actionDrugs()
 public function actionAddUser()
 {
     $model = new SignupForm();
+    
+    $models =new Seller();
+    
     if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+  
+        $models->log_id = User::findone(['email'=>$model->email])->id;
+        $models->save();
         Yii::$app->session->setFlash('success', 'User has been Added Successfully');
 
             // $seller = new Seller();
@@ -168,7 +176,6 @@ public function actionAddUser()
         'model' => $model,
     ]);
 }
-
 
 public function actionAddDrug()
 {
@@ -200,9 +207,16 @@ if($model = Drugs::findone($inv_id)->delete())
     return $this->goHome();
 }
 
+
 }
-
-
+public function actionDeleteCat($cat_id)
+{
+if($model = Categories::findone($cat_id)->delete())
+{
+    Yii::$app->session->setFlash('success', 'Drug Category Deleted Successfully');
+    return $this->goHome();
+}
+}
 
 public function actionReports()
 {
@@ -252,13 +266,8 @@ public function actionLogin()
         $this->layout = 'blank';
         $models = Categories::find()->all();
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            
-			
-			//admin
-			// $model->getUser();
-
-			//saler	
+        if ($model->load(Yii::$app->request->post()) && $model->login())
+         {
 			$this->layout = 'main';
 			return $this->render('index');
         }
@@ -286,36 +295,41 @@ public function actionLogin()
     }
 
 
-    public function actionUpload(){
+    // public function actionAddCat(){
 
-        $model = new Images();
-        $uploadPath = Yii::getAlias('@root') .'/uploads/';
+    //     $model = new Categories();
+    //     $uploadPath = Yii::getAlias('@root') .'/photo/';
     
-        if (isset($_FILES['image'])) {
-            $file = \yii\web\UploadedFile::getInstanceByName('image');
-          $original_name = $file->baseName;  
-          $newFileName = \Yii::$app->security
-                            ->generateRandomString().'.'.$file->extension;
-           // you can write save code here before uploading.
-            if ($file->saveAs($uploadPath . '/' . $newFileName)) {
-                $model->image = $newFileName;
-                $model->original_name = $original_name;
-                if($model->save(false)){
-                    echo \yii\helpers\Json::encode($file);
-                }
-                else{
-                    echo \yii\helpers\Json::encode($model->getErrors());
-                }
+    //     if ($model->load(Yii::$app->request->post()))
+    //      {
+    //         $file = \yii\web\UploadedFile::getInstanceByName('cat_pic');
+    //       $original_name = $file->baseName;  
+    //       $newFileName = \Yii::$app->security
+    //                         ->generateRandomString().'.'.$file->extension;
+    //        // you can write save code here before uploading.
+    //         if ($file->saveAs($uploadPath . '/' . $newFileName)) {
+    //             $model->cat_pic = $newFileName;
+    //             // $model->original_name = $original_name;
+    //             $model->user_id=yii::$app->user->getId();
+    //             if($model->save(false))
+    //             {
+    //                 echo \yii\helpers\Json::encode($file);
+    //                 Yii::$app->session->setFlash('success', 'Drug Category been Added Successfully');
+    //                 return $this->goHome();
+    //             }
+    //             else{
+    //                 echo \yii\helpers\Json::encode($model->getErrors());
+    //                 Yii::$app->session->setFlash('failure', 'Failure');
+    //                 return $this->goBack();
+    //             }
     
-            }
-        }
-        else {
-            return $this->render('upload', [
-                'model' => $model,
-            ]);
-        }
+    //         }
+    //     }
+    //     else {
+    //         return $this->render('addcategory', ['model'=>$model]);
+    //     }
     
-        return false;
-    }
+    //     return false;
+    // }
 }
 ?>
