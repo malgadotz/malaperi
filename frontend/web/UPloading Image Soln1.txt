@@ -1,0 +1,56 @@
+//MODEL
+<?php 
+class UploadForm extends Model
+{
+    /**
+     * @var UploadedFile file attribute
+     */
+    public $file;
+
+    /**
+     * @return array the validation rules.
+     */
+    public function rules()
+    {
+        return [
+            [['file'], 'file', 'extensions'=>'jpg, gif, png'],
+        ];
+    }
+}
+?>
+
+//CONTROLLER
+<?php
+class MediaController extends Controller
+{
+
+    public function actionIndex()
+    {
+
+        $model = new UploadForm();
+
+        //Set the path that the file will be uploaded to
+        $path = Yii::getAlias('@frontend') .'/web/upload/'
+
+        if (Yii::$app->request->isPost) {
+            $model->file = UploadedFile::getInstance($model, 'file');
+
+            if ($model->file && $model->validate()) {
+                $model->file->saveAs($path . $model->file->baseName . '.' . $model->file->extension);
+            }
+        }
+
+        return $this->renderPartial('index', ['model' => $model]);
+
+    }
+}
+?>
+
+//FORM
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']) ?>
+
+    <?= $form->field($model, 'file')->fileInput(); ?>
+
+    <?= Html::submitButton('Upload') ?>
+
+<?php ActiveForm::end() ?>
