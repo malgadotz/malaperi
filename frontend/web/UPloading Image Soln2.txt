@@ -1,0 +1,273 @@
+
+
+Here is complete solution of image uploading,updating, deleting an image. Please follow the steps carefully.
+1 Create uploads folder in your root directory.
+2 Root Alias in Yii2
+
+Open you common/config/bootstrap.php and add this line top of the file
+
+Yii::setAlias('@root', realpath(dirname(__FILE__).'/../../'));
+
+
+
+Here is complete solution of image uploading,updating, deleting an image. Please follow the steps carefully.
+1 Create uploads folder in your root directory.
+2 Root Alias in Yii2
+
+Open you common/config/bootstrap.php and add this line top of the file
+
+Yii::setAlias('@root', realpath(dirname(__FILE__).'/../../'));
+
+---
+
+3 Model:
+
+public function rules()
+    {
+    return [
+
+        ['image', 'image', 
+                    'skipOnEmpty' => true, 
+                    'extensions' => 'jpg, gif, png']
+
+        ];
+    }
+
+
+
+
+Here is complete solution of image uploading,updating, deleting an image. Please follow the steps carefully.
+1 Create uploads folder in your root directory.
+2 Root Alias in Yii2
+
+Open you common/config/bootstrap.php and add this line top of the file
+
+Yii::setAlias('@root', realpath(dirname(__FILE__).'/../../'));
+
+---
+
+3 Model:
+
+public function rules()
+    {
+    return [
+
+        ['image', 'image', 
+                    'skipOnEmpty' => true, 
+                    'extensions' => 'jpg, gif, png']
+
+        ];
+    }
+
+4 File Input
+
+<?php
+use yii\widgets\ActiveForm;
+?>
+
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
+
+    <?= $form->field($model, 'image')->fileInput() ?>
+
+    <button>Submit</button>
+
+<?php ActiveForm::end() ?>
+
+
+5 Controller action
+
+ class PostController extends Controller
+   {
+       public function actionCreate()
+       {
+        $model = new Post();
+        if ($model->load(Yii::$app->request->post())) {            
+            $file = \yii\web\UploadedFile::getInstance($model, 'image');
+            if (!empty($file))
+                $model->image = $file;
+
+            if($model->save())
+            {
+             if (!empty($file))
+              $file->saveAs( Yii::getAlias('@root') .'/uploads/' . $file);
+
+              return $this->redirect(['view', 'id' => $model->id]);
+            }
+            return $this->render('create', ['model' => $model]);
+        } else {
+            return $this->render('create', ['model' => $model]);
+        }
+       }
+
+       public function actionUpdate($id)
+       {
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())){           
+            $file = \yii\web\UploadedFile::getInstance($model, 'image');
+           if (!empty($file)){
+                 $delete = $model->oldAttributes['image'];
+                 $model->image= $file; 
+            }
+            else{
+                $model->image = $model->oldAttributes['image'];
+            }
+            if($model->save())
+            {
+             if (!empty($file))
+              $file->saveAs( Yii::getAlias('@root') .'/uploads/' . $file);
+
+              return $this->redirect(['view', 'id' => $model->id]);
+            }
+            return $this->render('update', ['model' => $model]);
+        } else {
+            return $this->render('update', ['model' => $model]);
+        }
+    }
+
+       public function actionDelete($id)
+       {
+        $model = $this->findModel($id);
+        if(file_exists(Yii::getAlias('@root') . '/uploads/'. $model->image))
+        unlink(Yii::getAlias('@root') . '/uploads/'. $model->image);
+        $model->delete(); 
+         return $this->redirect(['index']);
+       }
+
+  }
+
+
+
+Here is complete solution of image uploading,updating, deleting an image. Please follow the steps carefully.
+1 Create uploads folder in your root directory.
+2 Root Alias in Yii2
+
+Open you common/config/bootstrap.php and add this line top of the file
+
+Yii::setAlias('@root', realpath(dirname(__FILE__).'/../../'));
+
+---
+
+3 Model:
+
+public function rules()
+    {
+    return [
+
+        ['image', 'image', 
+                    'skipOnEmpty' => true, 
+                    'extensions' => 'jpg, gif, png']
+
+        ];
+    }
+
+4 File Input
+
+<?php
+use yii\widgets\ActiveForm;
+?>
+
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
+
+    <?= $form->field($model, 'image')->fileInput() ?>
+
+    <button>Submit</button>
+
+<?php ActiveForm::end() ?>
+
+5 Controller action
+
+ class PostController extends Controller
+   {
+       public function actionCreate()
+       {
+        $model = new Post();
+        if ($model->load(Yii::$app->request->post())) {            
+            $file = \yii\web\UploadedFile::getInstance($model, 'image');
+            if (!empty($file))
+                $model->image = $file;
+
+            if($model->save())
+            {
+             if (!empty($file))
+              $file->saveAs( Yii::getAlias('@root') .'/uploads/' . $file);
+
+              return $this->redirect(['view', 'id' => $model->id]);
+            }
+            return $this->render('create', ['model' => $model]);
+        } else {
+            return $this->render('create', ['model' => $model]);
+        }
+       }
+
+       public function actionUpdate($id)
+       {
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())){           
+            $file = \yii\web\UploadedFile::getInstance($model, 'image');
+           if (!empty($file)){
+                 $delete = $model->oldAttributes['image'];
+                 $model->image= $file; 
+            }
+            else{
+                $model->image = $model->oldAttributes['image'];
+            }
+            if($model->save())
+            {
+             if (!empty($file))
+              $file->saveAs( Yii::getAlias('@root') .'/uploads/' . $file);
+
+              return $this->redirect(['view', 'id' => $model->id]);
+            }
+            return $this->render('update', ['model' => $model]);
+        } else {
+            return $this->render('update', ['model' => $model]);
+        }
+    }
+
+       public function actionDelete($id)
+       {
+        $model = $this->findModel($id);
+        if(file_exists(Yii::getAlias('@root') . '/uploads/'. $model->image))
+        unlink(Yii::getAlias('@root') . '/uploads/'. $model->image);
+        $model->delete(); 
+         return $this->redirect(['index']);
+       }
+
+  }
+
+
+Edit:
+6 Show in Gridview(Backend)
+
+[
+'attribute' => 'image',
+'format' => 'html',    
+'value' => function ($data) {
+    return Html::img('../../../uploads/'. $data['image'],
+        ['width' => '70px']);
+ },
+],
+
+
+
+
+7 Show in DetailView(Backend)
+
+   [
+      'attribute'=>'image',
+      'label'=> 'Post Picture',
+      'value'=> '../../../uploads/' . $model->image,
+      'format'=>['image',['width'=>100, 'height'=>100]]
+    ],
+
+if you have hide frontend/web then add this rule in your project root (yii2-app) .htaccess file:
+
+RewriteEngine on
+
+  RewriteCond %{REQUEST_URI} /(uploads)
+  RewriteRule ^uploads/(.*)$ uploads/$1 [L]
+
+Show image in frontend
+
+ <img src="<?php echo 'uploads/'.$model->image; ?>">
+

@@ -1,0 +1,74 @@
+//MODEL
+namespace app\models;
+
+use yii\base\Model;
+use yii\web\UploadedFile;
+
+class UploadForm extends Model
+{
+    /**
+     * @var UploadedFile
+     */
+    public $imageFile;
+
+    public function rules()
+    {
+        return [
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
+        ];
+    }
+    
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+
+
+//FORM
+Rendering File Input
+
+<?php
+use yii\widgets\ActiveForm;
+?>
+
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
+
+    <?= $form->field($model, 'imageFile')->fileInput() ?>
+
+    <button>Submit</button>
+
+<?php ActiveForm::end() ?>
+
+//CONTROLLER
+
+namespace app\controllers;
+
+use Yii;
+use yii\web\Controller;
+use app\models\UploadForm;
+use yii\web\UploadedFile;
+
+class SiteController extends Controller
+{
+    public function actionUpload()
+    {
+        $model = new UploadForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
+    }
+}
