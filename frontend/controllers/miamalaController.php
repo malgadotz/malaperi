@@ -4,19 +4,18 @@ use yii\web\Controller;
 use frontend\models\MiamalaaForm;
 use frontend\models\Users;
 use frontend\models\Drugs;
+use frontend\models\Sales;
 use frontend\models\SignupForm;
 use common\models\LoginForm;
 use common\models\User;
 use common\models\Seller;
-use common\models\Sales;
+// use common\models\Sales;
 use common\models\Admin;
-use frontend\models\Categories;
-// use common\models\Categories;
+// use frontend\models\Categories;
+use common\models\Categories;
 use common\models\Drugss;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
-
 use yii\web\Response;
 use yii\web\UploadedFile;
 use Yii;
@@ -68,40 +67,14 @@ class MiamalaController extends Controller
 public function actionHome()
 {
 	
-// 	$session =Yii::$app->session;
-// 	$session['login']='name';
-// 	if(isset($session['login']))
-// 	{
-// 	 $layout = 'blank';
-		
-// 	return $this->render('index');
-
         $models = Categories::find()->all();
-        $usernow=User::findone(['id'=> yii::$app->user->getId()]);
-        $admin = Admin::findone(['log_id'=> yii::$app->user->getId()]);;
+        // $usernow=User::findone(['id'=> yii::$app->user->getId()]);
+        // $admin = Admin::findone(['log_id'=> yii::$app->user->getId()]);
         $drug = Drugs::find()->all();
-//         // $imgs = RequestImages::find()->all();
-//         // $donn = Donations::find()->all();
-// 	// return $this->render('login', ['model'=>$model]);
-// }
-// else{
-// 	$model = new Users();
-// 	return $this->render('/login/index', [
-// 		'model' => $model,
-// 	]);
-// }
-return $this->render('index', ['models' => $models, 'drug' => $drug, 'admin'=>$admin,'usernow'=>$usernow]);
+        return $this->render('index', ['models' => $models, 'drug' => $drug, ]);
 }
 public function actionPayments()
 {
-	 // $model=new PaymentForm();
-	// if ($model->load(Yii::$app->request->post()) && $model->save()) {
- //            return $this->goBack();
- //        }
-
-	return $this->render('payments'
-            
-        );
 }
 
 public function actionLoans()
@@ -126,18 +99,33 @@ public function actionGetData()
 
 if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->Refresh();
-       }
-
-
+       
 }
-
+}
 public function actionProfile()
 {
-	$model=new MiamalaaForm();
+    $id=\Yii::$app->user->identity->id;
+    $model=Seller::findone(['log_id'=>$id]);
+    
+    if($model->load(Yii::$app->request->post()))
+    {
+        $path = Yii::getAlias('@frontend') .'/web/photo/';
+        
+        $model->pic = UploadedFile::getInstance($model, 'pic');
+
+        if ($model->pic && $model->validate()) {
+            $model->pic->saveAs($path . $model->pic->baseName . '.' . $model->pic->extension);
+        }
+        $model->pic= $model->pic->baseName . '.' . $model->pic->extension;
+        $model->save();
+          
+            Yii::$app->session->setFlash('success', 'Profile  Updated Successfully');
+            return $this->goBack();
+        
+    }
+
 	return $this->render('profile',['model' => $model,
         ]);
-
-
 }
 
 public function actionAccount()
@@ -145,7 +133,6 @@ public function actionAccount()
 	$model=new User();
 	return $this->render('account', ['model'=>$model]);
 }
-
 public function actionDrugs()
 {
 	$model=Drugs::find()->all();
@@ -153,13 +140,16 @@ public function actionDrugs()
     $usernow=User::findone(['id'=> yii::$app->user->getId()]);
 	return $this->render('drugs', ['model'=>$model, 'admin'=>$admin, 'usernow'=>$usernow]);
 }
-
+public function actionDrugsCategory($drug_id)
+{
+	$model=Drugs::findall(['cat_id'=>$drug_id]);
+    $cat=Categories::findone(['cat_id'=>$drug_id]);
+	return $this->render('categories', ['model'=>$model, 'cat'=>$cat]);
+}
 public function actionAddUser()
 {
-    $model = new SignupForm();
-    
-    $models =new Seller();
-    
+    $model = new SignupForm();   
+    $models =new Seller(); 
     if ($model->load(Yii::$app->request->post()) && $model->signup()) {
   
         $models->log_id = User::findone(['email'=>$model->email])->id;
@@ -181,8 +171,7 @@ public function actionAddDrug()
 {
     $model = new Drugs();
     $category = Categories::find()->all();
-    
-    if ($model->load(Yii::$app->request->post())) 
+     if ($model->load(Yii::$app->request->post())) 
     {
         // $model->getData();
         $model->user_id=yii::$app->user->getId();
@@ -197,6 +186,53 @@ public function actionAddDrug()
     ]);
 }
 
+
+public function actionUpdateDrug($drug_id)
+{
+  
+    $drug = Drugs::findone(['inv_id' =>$drug_id]);
+    
+    if ($drug->load(Yii::$app->request->post())) 
+    {
+        $drug->save();        
+        Yii::$app->session->setFlash('success', 'Drug has been Updated Successfully');                 
+        return $this->goBack();
+    }
+
+    return $this->render('updatedrug', [ 'drug'=>$drug,
+    ]);
+}
+
+
+public function actionSellDrug($drug_id)
+{
+    $model = new Sales();
+    $drug = Drugs::findone(['inv_id'=>$drug_id]);
+
+    if ($model->load(Yii::$app->request->post())) 
+    {
+
+        $seller=Seller::findone(['log_id' =>\yii::$app->user->identity->id])->id;
+        // $model->getData();
+        $model->seller_id=$seller;
+        $model->drug_id=$drug->inv_id;
+        $drug->quantity=$drug->quantity-$model->quantity;
+        if($drug->quantity < 0)
+        {
+            Yii::$app->session->setFlash('warning', 'Quantity Exceeds Available'); 
+            return $this->refresh();                        
+        }
+        $drug->save();
+        $model->save();
+        // $model->cat_idgetCat()
+        Yii::$app->session->setFlash('success', 'Drug has been Sold Successfully');                 
+        return $this->goBack();
+    }
+
+    return $this->render('selldrug', [
+        'model' => $model, 'drug' =>$drug
+    ]);
+}
 
 
 public function actionDeletedrug($inv_id)
@@ -220,7 +256,7 @@ if($model = Categories::findone($cat_id)->delete())
 
 public function actionReports()
 {
-	$report=new Sales();
+	$report=Sales::find()->all();
 	return $this->render('reports', ['report'=>$report]);
 }
 
@@ -233,29 +269,55 @@ public function actionManageCat()
 public function actionAddCat()
 {
 	$model=new Categories();
-    // return $this->render('addcategory', ['model'=>$model]);
+    $admin=Admin::findone(['log_id'=>\yii::$app->user->identity->id])->log_id;
     if($model->load(Yii::$app->request->post()))
     {
-        $model->user_id=yii::$app->user->getId();
-        $model->cat_pic='gado.jpg';
-        $model->cat_name='Name';
+        $path = Yii::getAlias('@frontend') .'/web/photo/';
+        $model->user_id=$admin;
+        $model->cat_pic = UploadedFile::getInstance($model, 'cat_pic');
+
+        if ($model->cat_pic && $model->validate()) {
+            $model->cat_pic->saveAs($path . $model->cat_pic->baseName . '.' . $model->cat_pic->extension);
+        }
+        $model->cat_pic= $model->cat_pic->baseName . '.' . $model->cat_pic->extension;
         $model->save();
-        // User::getId();
-        // =yii::$app->user->getId();
-        // $model->cat_pict = UploadedFile::getInstance($model, 'cat_pict');
-        // $modelName=$model->cat_name;
-        //     $model->cat_pict->saveAs('uploads/' . $model->cat_pict->baseName . '.' . $model->cat_pict->extension);
-        //  $model->cat_pic='uploads/' . $model->cat_pict->baseName . '.' . $model->cat_pict->extension;
           
             Yii::$app->session->setFlash('success', 'Drug Category been Added Successfully');
             return $this->goHome();
         
     }
-    else
-    {
         return $this->render('addcategory', ['model'=>$model]);
-    }	
+    
 }
+
+public function actionUpdateCat($cat_id)
+{
+    $cat=Categories::findone(['cat_id'=>$cat_id]);
+    if($cat->load(Yii::$app->request->post()))
+    {
+        $path = Yii::getAlias('@frontend') .'/web/photo/';
+        
+        $cat->cat_pic = UploadedFile::getInstance($cat, 'cat_pic');
+
+        if ($cat->cat_pic && $cat->validate()) {
+            $cat->cat_pic->saveAs($path . $cat->cat_pic->baseName . '.' . $cat->cat_pic->extension);
+        }
+        $cat->cat_pic= $cat->cat_pic->baseName . '.' . $cat->cat_pic->extension;
+        $cat->save();
+          
+            Yii::$app->session->setFlash('success', 'Drug Category been Updated Successfully');
+            return $this->goBack();
+        
+    }
+        return $this->render('updatecategory', ['cat'=>$cat]);
+    
+}
+
+
+
+
+
+
 public function actionLogin()
     {
 		
@@ -264,25 +326,30 @@ public function actionLogin()
         // }
 
         $this->layout = 'blank';
-        $models = Categories::find()->all();
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login())
          {
 			$this->layout = 'main';
-			return $this->render('index');
+        //     $session =Yii::$app->session;
+        // $session['login']=$model->username;
+        $id=\Yii::$app->user->identity->id;
+        
+       
+       if(Admin::findone(['log_id'=>$id]))
+        return $this->goHome();
+     
+        if( Seller::findone(['log_id'=>$id]))
+        {
+            return $this->goHome();
+        
+         }
         }
-
         $model->password = '';
-		
-
+	
         return $this->render('login', [
-            'model' => $model,'models' => $models,
+            'model' => $model,
         ]);
     }
-
-
-
-
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -298,7 +365,7 @@ public function actionLogin()
     // public function actionAddCat(){
 
     //     $model = new Categories();
-    //     $uploadPath = Yii::getAlias('@root') .'/photo/';
+    //     $uploadPath = Yii::getAlias('@frontend') .'/photo/';
     
     //     if ($model->load(Yii::$app->request->post()))
     //      {

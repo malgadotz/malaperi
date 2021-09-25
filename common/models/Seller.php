@@ -30,7 +30,7 @@ class Seller extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['log_id'], 'required'],
+            [['pic', 'mobile', 'log_id'], 'required'],
             [['mobile', 'log_id'], 'integer'],
             [['pic'], 'string', 'max' => 222],
             [['log_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['log_id' => 'id']],

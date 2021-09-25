@@ -1,5 +1,8 @@
 <?php
+use common\models\Seller;
+use common\models\User;
 
+use frontend\models\Drugs;
 use yii\helpers\Html;
 ?>
  <div class="content">
@@ -11,30 +14,26 @@ use yii\helpers\Html;
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">
       <thead>
         <th>#</th>
-        <th>Name Of Product</th>
-        <th>quantity Purchased</th>
+        <th>Drug Name</th>
+        <th>Quantity Purchased</th>
         <th>Amount Payed</th>
-        <th>Transaction By:</th>
-        <th>Date</th>
+        <th>Sold By:</th>
+        <th>Date Performed</th>
         <th>Action</th>
-
       </thead>
      <tbody>
      <?php 
-     $i=0;
+     $i=1;
      foreach($report as $report): ?>
           <tr>
-            <td><?php echo $i+1;?></td>
-            <td>
-            
-            <!-- //  echo $report->product; -->
-             
-     </td>
-            
-             <td colspan="center"><i class="fa fa-edit fa-lg text-primary"></i><?= Html:: a("update",['/miamala/profile'],['class' => 'btn btn-success btn-xs']) ?>
-
+            <td><?php echo $i++;?></td>
+            <td><?php echo Drugs::findone(['inv_id'=>$report->drug_id])->drug_name;?></td>
+            <td><?php echo $report->quantity;?></td>
+            <td><?php echo $report->amount;?></td>
+            <td><?php echo User::findone(['id'=>Seller::findone(['id'=> $report->seller_id])->log_id])->username;?></td>
+            <td><?php echo $report->date;?></td>
+             <td>
               <i class="fa fa-print fa-lg text-dark"></i><?= Html:: a("print",['/miamala/profile'],['class' => 'btn btn-info btn-xs']) ?>
-
             </td>
           </tr>
           <?php endforeach; ?>  

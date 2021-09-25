@@ -21,6 +21,7 @@ use yii\helpers\Html;
       <thead>
         <th>#</th>
         <th>Name Of Product</th>
+        <th>Drugs Types Available</th>
         <th>quantity Available</th>
         <th>Action</th>
       </thead>
@@ -40,9 +41,18 @@ use yii\helpers\Html;
               <?php endforeach; ?>  
               <?php echo $sum;?>
             </td>
+            <td><?php $su=0;
+       foreach($drug as $drugs): ?>
+        <?php if($model->cat_id == $drugs->cat_id):  
+          $su=$su+$drugs->quantity;
+          ?>
+          <?php endif; ?>
+          <?php endforeach; ?>  
+      <?php echo $su;?>
+        </td>
             <td>
               <i class="fa fa-edit fa-lg text-primary"></i>
-              <?= Html:: a("update",['/miamala/manage-cat'],['class' => 'btn btn-success btn-xs']) ?>
+              <?= Html:: a("update",['/miamala/update-cat' , 'cat_id'=>$model->cat_id],['class' => 'btn btn-success btn-xs']) ?>
               <i class="fa fa-trash fa-lg text-dark"></i>
               <?= Html:: a("Delete",['/miamala/delete-cat', 'cat_id'=>$model->cat_id],['class' => 'btn btn-danger btn-xs']) ?>
             </td>

@@ -10,7 +10,7 @@ class Drugs extends ActiveRecord{
     private $inv_id;
     private $drug_name;
     private $price;
-    private $unit;
+    private $quantity;
  
     private $cat_id;
     private $expire;
@@ -19,7 +19,18 @@ class Drugs extends ActiveRecord{
 
     public function rules(){
         return[
-            [['cat_id','drug_name', 'unit','price','expire','description'],'required']
+            [['cat_id','drug_name', 'quantity','price','expire','description'],'required']
+        ];
+    }
+
+
+    public function attributeLabels()
+    {
+        return [
+            'quantity' => 'Drug quantity' ,
+            'price' => 'Price Per Unity' ,
+            'expire' => 'Expire Date' ,
+            'description' => 'Drug Description' ,
         ];
     }
 }

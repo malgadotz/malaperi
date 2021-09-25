@@ -10,10 +10,11 @@ class Categories extends ActiveRecord{
     private $cat_id;
     private $cat_name;
     private $cat_pic;
+    private $user_id;
     public function rules()
     {
         return[
-            [['cat_id','cat_name', 'cat_pic'],'required'],
+            [['cat_name', 'cat_pic','user_id'],'required'],
             [['cat_pic'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
         ];
     }

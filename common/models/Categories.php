@@ -33,14 +33,8 @@ class Categories extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cat_name', 'cat_pic'], 'required'],
-            [['user_id'], 'integer'],
-            [['cat_pic'], 'string', 'max' => 111],
-            [['cat_name'], 'string', 'max' => 222],
-            [['cat_pict'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg,jpge,web,gif'],
-            
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Admin::className(), 'targetAttribute' => ['user_id' => 'id']],
-        ];
+            [['cat_name', 'cat_pic','user_id'], 'required'],
+            ];
     }
 
     /**

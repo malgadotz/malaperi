@@ -11,13 +11,20 @@ class Sales extends ActiveRecord{
     private $sales_id;
     private $quantity;
     private $amount;
-    private $user_id;
-    private $date;
-    private $inv_id;
+    private $drug_name;
+    private $seller_id;
+    
+    private $drug_id;
 
     public function rules(){
         return[
-            [['sales_id','quantity', 'amount','user_id','date','inv_id'],'required']
+            [['quantity', 'amount','seller_id','drug_id'],'required']
+        ];
+    }
+    public function attributeLabels()
+    {
+        return [
+            'quantity' => 'Quantity To Sell' ,
         ];
     }
 }

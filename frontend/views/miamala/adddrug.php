@@ -27,8 +27,7 @@ $form=ActiveForm::begin([
     
     <?= $form->field($model, 'drug_name')->textInput(['autofocus' => true]) ?>
 
-<?= $form->field($model, 'unit')->textInput() ?>
-
+<?= $form->field($model, 'quantity')->textInput()?>
 <?= $form->field($model, 'price')->textInput() ?>
 <?= $form->field($model, 'expire')->textInput()?>
 <?= $form->field($model, 'cat_id')->dropDownList(

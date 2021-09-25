@@ -6,6 +6,7 @@ namespace frontend\controllers;
 use yii\base\Model;
 use common\widgets\Alert;
 use common\models\User;
+use common\models\Seller;
 use common\models\Admin;
 use frontend\assets\AppAsset;
 use yii\bootstrap4\Breadcrumbs;
@@ -15,7 +16,20 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap4\NavBar;
 use yii;
 
-
+$id=\Yii::$app->user->identity->id;
+$userwho="user";
+$user;
+if(Admin::findone(['log_id'=>$id]))
+{ 
+$userwho = "admin";
+$user=Admin::findone(['log_id'=>$id]);
+}
+else 
+{
+  $userwho= "seller";
+  $user=Seller::findone(['log_id'=>$id]);
+  
+}
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -52,8 +66,7 @@ AppAsset::register($this);
     ?>
 
 </header>
-<?php 
-if ('john') {?>
+
 <div class="dashboard side-navbar navbar-dark bg-dark comic">
 <!-- <div class="card"> -->
   <div style="background:#357CA5;opacity: ;padding: 14px 3px;color:white;font-size: 15pt;text-align: center;text-shadow: 1px 1px 11px black">
@@ -61,7 +74,9 @@ if ('john') {?>
   </div>
   <div class="flex" style="padding: 3px 7px;margin:5px 2px;">
     <div>
-      <img src="/photo/<?php echo Admin::findone(['log_id'=>\Yii::$app->user->identity->id])->pic;?>
+      <img src="/photo/<?php 
+      echo $user->pic;
+      ?>
 " class='img-circle' style='width: 77px;height: 66px'></div>
     <div style="color:lightgreen;font-size: 13pt;padding: 14px 7px;margin-left: 11px;">
     <?=Yii::$app->user->identity->username ?>
@@ -75,9 +90,12 @@ if ('john') {?>
         <li style="color: white"><i class="fa fa-home fa-fw text-primary"></i> <?= Html:: a("Home", Yii::$app->homeUrl,['class' => 'btn btn-primary half-5']) ?></li>
 
         <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Drugs",['/miamala/drugs'],['class' => 'btn btn-primary half-5']) ?></li>
-
+        <?php 
+if ($userwho == 'admin'):?>
        <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Drug",['/miamala/add-drug'],['class' => 'btn btn-primary half-5']) ?></li>
 <!--         <a href="newsell"><li><i class="fa fa-circle-o fa-fw"></i> New Sell</li></a> -->
+<?php endif;?>
+
         <li><i class="fa fa-folder-open fa-fw text-success"></i> <?= Html:: a("Report",['/miamala/reports'],['class' => 'btn btn-primary half-5']) ?></li>
       </ul>
     </div>
@@ -85,8 +103,9 @@ if ('john') {?>
   <div style="background:#1E282C;color: white;padding: 13px 17px;border-left: 3px solid #3C8DBC;"><span><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Other Menu</span></div>
   <div class="item">
       <ul class="nostyle zero">
-
+      <?php if ($userwho == 'admin'):?>
         <li><i class="fa fa-user-plus fa-fw text-warning"></i> <?= Html:: a("Register New Seller",['/miamala/add-user'],['class' => 'btn btn-primary half-5']) ?></li>
+        <?php endif;?>
        <li><i class="fa fa-user-circle-o fa-fw text-gado"></i> <?= Html:: a("Profile Settings",['/miamala/profile'],['class' => 'btn btn-primary half-5']) ?></li>
         <li><i class="fa fa-lock fa-fw text-info"></i> <?= Html:: a("Account Settings",['/miamala/account'],['class' => 'btn btn-primary half-5']) ?></li>
         <li><i class="fa fa-sign-out fa-fw text-white"></i> <?= Html:: a("Sign Out",['/miamala/login'],['class' => 'btn btn-primary half-5']) ?></li>
@@ -95,7 +114,7 @@ if ('john') {?>
 <!-- </div> -->
 </div>
 
-<?php }?>
+
 
 <div class="marginLeft">
 

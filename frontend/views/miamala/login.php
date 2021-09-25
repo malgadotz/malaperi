@@ -1,6 +1,6 @@
 <?php
 namespace frontend\controllers;
-use\yii\Widgets;
+use yii\Widgets;
 use yii\base\Model;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
@@ -10,11 +10,12 @@ use yii;
 
 	<div class="login-box">
 
-  	<div class="well well-sm center bg-dark" style="width: 45%;margin: auto;padding:4px 11px;margin-top: 111px;text-align: center;">
-  		<h3 class="center text-white">MEDICAL STORE MANAGEMENT SYSTEM </h3>
+  	<div class="well well-sm center bg-primary" style="
+    width: 45%;margin: auto;padding:4px 11px;margin-top: 111px;text-align: center; ">
+  		<h3 class="center">Medical Store Management System | Login</h3>
   	</div>
   <!-- /.login-logo -->
-  <div class="well well-sm" style="width: 45%;margin:auto;padding: 22px;margin-top: 22px;z-index: 6">
+  <div class="well well-sm" style="width: 45%;margin:auto;padding: 22px;margin-top: 22px;z-index: 6 ;">
     <p class="login-box-msg">Sign in to start your session</p>
 
 
@@ -33,6 +34,9 @@ use yii;
 <?= $form->field($model, 'password')->passwordInput( ['class' => 'form-control']) ?>
 <!-- <span class="fa fa-lock form-control-feedback"></span> -->
     </div>
+    <div class="form-group ">
+<?= $form->field($model, 'rememberMe')->checkbox() ?>
+</div>
 <!-- <div class="form-group ">
 /* //$form->field($model, 'rememberMe')->checkbox() 
 </div> -->
