@@ -24,9 +24,10 @@ $form=ActiveForm::begin([
     <div class="card-body">
      
 
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'prompt'=> 'Hasanamli']) ?>
 
-        <?= $form->field($model, 'email')->passwordInput() ?>                
+        <?= $form->field($model, 'email')->textInput(['prompt'=>$model->email]) ?>  
+        
               
         <div class="form-group">
             <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'contact-button']) ?>

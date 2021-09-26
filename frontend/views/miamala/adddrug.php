@@ -1,5 +1,8 @@
 <?php
+
 namespace frontend\controllers;
+use dosamigos\datepicker\DatePicker;
+// use yii\jui\DatePicker;
 use yii\base\Model;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
@@ -29,7 +32,10 @@ $form=ActiveForm::begin([
 
 <?= $form->field($model, 'quantity')->textInput()?>
 <?= $form->field($model, 'price')->textInput() ?>
-<?= $form->field($model, 'expire')->textInput()?>
+
+<?= $form->field($model, 'date')->textInput()?>
+    
+
 <?= $form->field($model, 'cat_id')->dropDownList(
     ArrayHelper::map(Categories::find()->all(),'cat_id','cat_name'), ['prompt' => 'select Category']) ?>
 

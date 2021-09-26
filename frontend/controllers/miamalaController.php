@@ -105,18 +105,27 @@ if ($model->load(Yii::$app->request->post()) && $model->save()) {
 public function actionProfile()
 {
     $id=\Yii::$app->user->identity->id;
-    $model=Seller::findone(['log_id'=>$id]);
-    
+    $seller=Seller::findone(['log_id'=>$id]);
+    $admin=Admin::findone(['log_id'=>$id]);
+    if($seller)
+    {
+        $model=$seller;
+    }
+    else
+    {
+        $model=$admin;
+    }
     if($model->load(Yii::$app->request->post()))
     {
-        $path = Yii::getAlias('@frontend') .'/web/photo/';
+        $folder = Yii::getAlias('@frontend') .'/web/photo/';
         
         $model->pic = UploadedFile::getInstance($model, 'pic');
-
+            $picname= $model->pic->baseName . '.' . $model->pic->extension;
+            $path=$folder.$picname;
         if ($model->pic && $model->validate()) {
-            $model->pic->saveAs($path . $model->pic->baseName . '.' . $model->pic->extension);
+            $model->pic->saveAs($path);
         }
-        $model->pic= $model->pic->baseName . '.' . $model->pic->extension;
+        $model->pic= $picname;
         $model->save();
           
             Yii::$app->session->setFlash('success', 'Profile  Updated Successfully');
@@ -130,7 +139,16 @@ public function actionProfile()
 
 public function actionAccount()
 {
-	$model=new User();
+    $id=\Yii::$app->user->identity->id;
+	$model=User::findone(['id'=> $id]);
+    if ($model->load(Yii::$app->request->post())) {
+        $model->username=$model->username;
+    //    $model->setPassword($model->email);
+        $model->save();
+        Yii::$app->session->setFlash('success', 'Profile updated succesfully Successfully');
+        return $this->goBack();
+    }
+
 	return $this->render('account', ['model'=>$model]);
 }
 public function actionDrugs()
