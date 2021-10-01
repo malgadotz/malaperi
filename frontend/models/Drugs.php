@@ -19,8 +19,12 @@ class Drugs extends ActiveRecord{
 
     public function rules(){
         return[
-            [['cat_id','drug_name', 'quantity','price','expire','description'],'required']
-        ];
+            [['cat_id','drug_name', 'quantity','price','expire','description'],'required'],
+                 [['cat_id', 'admin_id','quantity', 'price'], 'integer', 'min'=>0],
+            [['drug_name' , 'pic', 'description'], 'string'],
+            [['expire', 'date'], 'safe'],
+
+            [['cat_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['cat_id' => 'cat_id']],];
     }
 
 

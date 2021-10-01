@@ -23,7 +23,6 @@ class Seller extends \yii\db\ActiveRecord
     {
         return 'seller';
     }
-
     /**
      * {@inheritdoc}
      */
@@ -44,8 +43,8 @@ class Seller extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pic' => 'Pic',
-            'mobile' => 'Mobile',
+            'pic' => 'Profile Picture',
+            'mobile' => 'Mobile Number',
             'log_id' => 'Log ID',
         ];
     }

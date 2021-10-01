@@ -23,7 +23,7 @@ $form=ActiveForm::begin([
         <li class="active">Add New Drug</li>
     </ol>
    <div class="card  mauto half">
-    <div class="card-header bg-primary">
+    <div class="modal-header bg-info">
     <h3 class="text-center btn-block"><i class="fa fa-user-plus text-white"></i> Add New Drug</h3>
     </div>
     <div class="card-body">
@@ -33,7 +33,15 @@ $form=ActiveForm::begin([
 <?= $form->field($model, 'quantity')->textInput()?>
 <?= $form->field($model, 'price')->textInput() ?>
 
-<?= $form->field($model, 'date')->textInput()?>
+<?= $form->field($model, 'expire')->widget(
+    DatePicker::className(), [
+         'inline' => false, 
+        'clientOptions' => [
+            'autoclose' => true,
+            'format' => 'yyyy-mm-dd'
+        ]
+]);?>
+
     
 
 <?= $form->field($model, 'cat_id')->dropDownList(

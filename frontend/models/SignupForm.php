@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\Seller;
 
 /**
  * Signup form
@@ -14,6 +15,9 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $mobile;
+    public $pic;
+
 
 
     /**
@@ -35,6 +39,16 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+            ['pic', 'string'],
+            ['mobile', 'integer'],
+            ['mobile', 'unique', 'targetClass' => '\common\models\seller','message' => 'This mobile number is already in use.'],
+        ];
+    }
+     public function attributeLabels()
+    {
+        return [
+            'pic' => 'Profile Picture',
+            'mobile' => 'Mobile Number',
         ];
     }
 

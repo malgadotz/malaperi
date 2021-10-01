@@ -14,7 +14,7 @@ use yii\helpers\Html;
 
 
       <span style="font-size: 16pt;color: #333333">Categories </span>
-      <button class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#addIn" style="margin-left: 2px;"><i class="fa fa-plus fa-fw"> </i><?= Html:: a("Add New Category",['/miamala/add-cat'],['class' => 'nostyle text-white']) ?></button>
+      <?= Html:: a(" Add New Category",['/miamala/add-cat'],['class' => 'fa fa-plus btn btn-primary btn-sm pull-right text-white']) ?>
 
     </div><div class="tableBox " >
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">
@@ -51,10 +51,10 @@ use yii\helpers\Html;
       <?php echo $su;?>
         </td>
             <td>
-              <i class="fa fa-edit fa-lg text-primary"></i>
-              <?= Html:: a("update",['/miamala/update-cat' , 'cat_id'=>$model->cat_id],['class' => 'btn btn-success btn-xs']) ?>
-              <i class="fa fa-trash fa-lg text-dark"></i>
-              <?= Html:: a("Delete",['/miamala/delete-cat', 'cat_id'=>$model->cat_id],['class' => 'btn btn-danger btn-xs']) ?>
+             
+              <?= Html:: a("",['/miamala/update-cat' , 'cat_id'=>$model->cat_id],['class' => 'fa fa-edit fa-lg   btn-sm']) ?>
+              
+              <?= Html:: a("",['/miamala/delete-cat', 'cat_id'=>$model->cat_id],['class' => 'fa fa-trash fa-lg text-danger btn-sm']) ?>
             </td>
           </tr>      
           <?php endforeach; ?>  

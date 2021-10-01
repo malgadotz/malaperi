@@ -7,11 +7,8 @@ use yii\helpers\ArrayHelper;
 use common\models\Categories;
 use yii;
 $url1=Yii::$app->homeUrl;
-
-
 $form=ActiveForm::begin([
 'id' => 'profile'
-
 ])
    ?>  
    <div class="content">
@@ -19,36 +16,32 @@ $form=ActiveForm::begin([
         <li><a href=<?=$url1;?>><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">Sell Drug</li>
     </ol>
+    </div>
+
    <div class="card  mauto half">
     <div class="card-header bg-primary">
     <h3 class="text-center btn-block"><i class="fa fa-user-plus text-white"></i>Sell  Drug</h3>
     </div>
     <div class="card-body">   
         <div class="form-group ">
-        <?= $form->field($drug, 'drug_name')->textInput(['prompt' =>$drug->drug_name]) ?>
+        <?= $form->field($drug, 'drug_name')->textInput(['prompt' =>$drug->drug_name, 'readOnly' =>true] ) ?>
         <div class="form-group">
-        <?= $form->field($drug, 'quantity')->textInput(['prompt' =>$drug->quantity]) ?>
+        <?= $form->field($drug, 'quantity')->textInput(['prompt' =>$drug->quantity, 'readOnly' =>true]) ?>
         </div>
         <div class="form-group">
-        <?= $form->field($drug, 'price')->textInput(['prompt' =>$drug->price]) ?>
+        <?= $form->field($drug, 'price')->textInput(['prompt' =>$drug->price, 'readOnly' =>true]) ?>
         </div>
         
         <div class="form-group ">
         <?= $form->field($model, 'quantity')->textInput()?>
         </div>
-        <?php 
-        // $amount;
-        // if(isset($model['amount']))
-        // {
-        // $amount=;
-        // }
-        // ?>
         <div class="form-group ">
-        <?= $form->field($model, 'amount')->textInput(['prompt' =>$drug->price * $model->quantity])?>
+        <?= $form->field($model, 'amount')->textInput(['readOnly'=>true])?>
         </div>
         
                 <div class="form-group">
-                    <button class="btn btn-success btn-right">Confirm Sale</button>
+                    <button class="btn btn-info float-left">Generate Cost</button> 
+                    <button class="btn btn-success float-right">Confirm Sell</button>
                 </div>
 
             <?php ActiveForm::end(); ?>

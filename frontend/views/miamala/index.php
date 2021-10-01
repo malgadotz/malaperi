@@ -24,28 +24,27 @@ else
   
 }
 ?>
-
-<div class="content">
-<ol class="breadcrumb ">
-        <a href=<?=Yii::$app->homeUrl;?>><i class="fa fa-dashboard"></i> Dashboard</a>
+   <div class="content">
+       <ol class="breadcrumb ">
+        <li><a href=<?=yii::$app->homeUrl?>><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">Home</li>
     </ol>
-   </div>
+    </div>
+
    <div class="content2">
     <!-- //errow message -->
-    <div class="">
+    
    <span style="font-size: 16pt;color: #333333">Categories </span>
       <?php if($userwho == 'admin'):?>
-      <button class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#addIn"><i class="fa fa-gear  fa-fw"> </i><?= Html:: a("Manage Categories",['/miamala/manage-cat'],['class' => 'nostyle text-white']) ?></button>
+      <?= Html:: a(" Manage Categories",['/miamala/manage-cat'],['class' => ' btn fa fa-gear btn-primary btn-sm pull-right nostyle text-white']) ?>
         <?php endif;?>
     </div>
 
-  
+<div class="mauto card half-5">
+  <div class="row mauto card-body">
 <!-- //fetch data starts here -->
 <?php foreach($models as $models): ?>
-
-  
-      <div class="box2 col-md-3">
+  <div class="box2 col-md-3">
         <div class="center">
          <img src="photo/<?php echo $models->cat_pic;?>" style="width: 155px;height: 122px;" class='img-thumbnail'>
         </div>
@@ -71,7 +70,7 @@ else
     </span>  
     <hr style="margin: 7px;">
       
-      <span style="padding: 11px"><strong style="font-size: 10pt">Available Qty</strong><span class="pull-right" style="color:blue;margin-right: 11px">
+      <span style="padding: 11px"><strong style="font-size: 10pt">Quantity Left</strong><span class="pull-right" style="color:blue;margin-right: 11px">
       <?php $su=0;
        foreach($drug as $drugs): ?>
         <?php if($models->cat_id == $drugs->cat_id):  
@@ -83,7 +82,6 @@ else
       </span>      
     </span>    
        </div>
-    
   <!-- //end php -->
   <?php endforeach; ?>
   <!-- //fetch data starts here -->

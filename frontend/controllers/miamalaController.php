@@ -5,7 +5,7 @@ use frontend\models\MiamalaaForm;
 use frontend\models\Users;
 use frontend\models\Drugs;
 use frontend\models\Sales;
-use frontend\models\SignupForm;
+use frontend\models\SignupForm;use frontend\models\ResetPassword;
 use common\models\LoginForm;
 use common\models\User;
 use common\models\Seller;
@@ -18,37 +18,50 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use kartik\mpdf\Pdf;
+use \Mpdf\Mpdf;
 use Yii;
 class MiamalaController extends Controller
 {
-	// public function behaviors()
-    // {
-    //     return [
-    //         'access' => [
-    //             'class' => AccessControl::className(),
-    //             'rules' => [
-    //                 [
-    //                     'actions' => ['index','login','add-user','inventeries','profile','reports','account'],
-    //                     'allow' => true,
-    //                 ],
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => [
 
-    //                 //rule2
-    //                 [
-    //                     'actions' => ['logout', 'login'],
-    //                     'allow' => true,
-    //                     'roles' => ['@'],
-    //                 ],
-    //                 //rule3
-    //             ],
-    //         ],
-    //         'verbs' => [
-    //             'class' => VerbFilter::className(),
-    //             'actions' => [
-    //                 'logout' => ['post'],
-    //             ],
-    //         ],
-    //     ];
-    // }
+                            'add-drug','update-drug','delete-drug','delete-cat','manage-cat','add-cat','update-cat','add-seller','login','logout','inventory'
+                        ],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                     [
+                        'actions' => ['sell-drug','invoice','print'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['logout','index','drugs','sales-report','reports','profile','account','drugs-category'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    // 'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -61,46 +74,12 @@ class MiamalaController extends Controller
             ],
         ];
     }
-    
 
-// public $layout='miamalaLayout';
-public function actionHome()
+public function actionIndex()
 {
-	
-        $models = Categories::find()->all();
-        // $usernow=User::findone(['id'=> yii::$app->user->getId()]);
-        // $admin = Admin::findone(['log_id'=> yii::$app->user->getId()]);
+        $models = Categories::find()->all();   
         $drug = Drugs::find()->all();
         return $this->render('index', ['models' => $models, 'drug' => $drug, ]);
-}
-public function actionPayments()
-{
-}
-
-public function actionLoans()
-{
-	$model=new LoansForm();
-
-if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->Refresh();
-        }
-
-	return $this->render('loans', [
-            'model' => $model,
-        ]);
-}
-
-
-public function actionGetData()
-{
-	$model=new MiamalaaForm();
-	$model->manipdata();
-	$model->save();
-
-if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->Refresh();
-       
-}
 }
 public function actionProfile()
 {
@@ -117,15 +96,14 @@ public function actionProfile()
     }
     if($model->load(Yii::$app->request->post()))
     {
-        $folder = Yii::getAlias('@frontend') .'/web/photo/';
+        $path = Yii::getAlias('@frontend') .'/web/photo/';
         
         $model->pic = UploadedFile::getInstance($model, 'pic');
-            $picname= $model->pic->baseName . '.' . $model->pic->extension;
-            $path=$folder.$picname;
+
         if ($model->pic && $model->validate()) {
-            $model->pic->saveAs($path);
+            $model->pic->saveAs($path . $model->pic->baseName . '.' . $model->pic->extension);
         }
-        $model->pic= $picname;
+        $model->pic= $model->pic->baseName . '.' . $model->pic->extension;
         $model->save();
           
             Yii::$app->session->setFlash('success', 'Profile  Updated Successfully');
@@ -140,16 +118,27 @@ public function actionProfile()
 public function actionAccount()
 {
     $id=\Yii::$app->user->identity->id;
-	$model=User::findone(['id'=> $id]);
-    if ($model->load(Yii::$app->request->post())) {
-        $model->username=$model->username;
-    //    $model->setPassword($model->email);
-        $model->save();
-        Yii::$app->session->setFlash('success', 'Profile updated succesfully Successfully');
+	$model=new ResetPassword();
+    
+    $new=User::findone(['id'=> $id]);
+    $model->name=$new->username;
+    if ($model->load(Yii::$app->request->post()))
+
+     {  
+     if($new->validatePassword($model->oldpassword))
+     {  
+        $new->username=$model->name;
+        $new->setPassword($model->newppassword);
+        $new->save();
+        Yii::$app->session->setFlash('success', 'Login updated succesfully Successfully');
         return $this->goBack();
     }
-
-	return $this->render('account', ['model'=>$model]);
+    else
+    {
+        $model->addError("oldpassword", "Old Password Incorrect");
+    }
+    }
+	return $this->render('account', ['model'=>$model, 'new'=>$new]);
 }
 public function actionDrugs()
 {
@@ -164,37 +153,15 @@ public function actionDrugsCategory($drug_id)
     $cat=Categories::findone(['cat_id'=>$drug_id]);
 	return $this->render('categories', ['model'=>$model, 'cat'=>$cat]);
 }
-public function actionAddUser()
-{
-    $model = new SignupForm();   
-    $models =new Seller(); 
-    if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-  
-        $models->log_id = User::findone(['email'=>$model->email])->id;
-        $models->save();
-        Yii::$app->session->setFlash('success', 'User has been Added Successfully');
-
-            // $seller = new Seller();
-            // $userss = new User();
-            // $seller->log_id=$userss->getId($model->username);            
-        return $this->goHome();
-    }
-
-    return $this->render('adduser', [
-        'model' => $model,
-    ]);
-}
-
 public function actionAddDrug()
 {
     $model = new Drugs();
     $category = Categories::find()->all();
      if ($model->load(Yii::$app->request->post())) 
     {
-        // $model->getData();
-        $model->user_id=yii::$app->user->getId();
+        
+        $model->admin_id=Admin::findone(['log_id' => yii::$app->user->getId()])->id;
         $model->save();
-        // $model->cat_idgetCat()
         Yii::$app->session->setFlash('success', 'Drug has been Added Successfully');                 
         return $this->goHome();
     }
@@ -203,7 +170,6 @@ public function actionAddDrug()
         'model' => $model, 'category'=>$category,
     ]);
 }
-
 
 public function actionUpdateDrug($drug_id)
 {
@@ -235,16 +201,24 @@ public function actionSellDrug($drug_id)
         $model->seller_id=$seller;
         $model->drug_id=$drug->inv_id;
         $drug->quantity=$drug->quantity-$model->quantity;
+
         if($drug->quantity < 0)
         {
-            Yii::$app->session->setFlash('warning', 'Quantity Exceeds Available'); 
-            return $this->refresh();                        
+           $model->addError("quantity", "Quantity Exceeds Availabe Stock"); 
         }
+        else if($model->amount != $drug->price * $model->quantity)
+        {
+           $model->amount = $drug->price * $model->quantity;
+
+        }
+        else if ($model->amount == $drug->price * $model->quantity)
+        {
         $drug->save();
         $model->save();
         // $model->cat_idgetCat()
         Yii::$app->session->setFlash('success', 'Drug has been Sold Successfully');                 
         return $this->goBack();
+        }
     }
 
     return $this->render('selldrug', [
@@ -253,7 +227,7 @@ public function actionSellDrug($drug_id)
 }
 
 
-public function actionDeletedrug($inv_id)
+public function actionDeleteDrug($inv_id)
 {
 if($model = Drugs::findone($inv_id)->delete())
 {
@@ -278,6 +252,70 @@ public function actionReports()
 	return $this->render('reports', ['report'=>$report]);
 }
 
+public function actionSalesReport()
+{
+    $sales=Sales::find()->all();
+    $content= $this->renderPartial('salesreport', ['sales'=>$sales]);
+   $pdf = new Pdf([
+        'mode' => Pdf::MODE_CORE, 
+        'format' => Pdf::FORMAT_A4, 
+        'orientation' => Pdf::ORIENT_LANDSCAPE, 
+        'destination' => Pdf::DEST_BROWSER, 
+        'content' => $content,  
+        'cssFile' => '@frontend/web/css/malipo.css',
+        'cssInline' => '.kv-heading-1{font-size:18px}', 
+        'options' => ['title' => 'Medical Store Sales Report'],
+        'methods' => [ 
+            // 'SetHeader'=>['SALES REPORT'], 
+            'SetFooter'=>['{PAGENO}'],
+        ]
+    ]);
+    return $pdf->render();
+}
+public function actionInvoice()
+{
+        $model=Drugs::find()->all();
+    $content= $this->renderPartial('drugreport', ['model'=>$model,]);
+    $pdf = new Pdf([
+        'mode' => Pdf::MODE_CORE, 
+        'format' => Pdf::FORMAT_A4, 
+        'orientation' => Pdf::ORIENT_LANDSCAPE, 
+        'destination' => Pdf::DEST_BROWSER, 
+        'content' => $content,  
+        'cssFile' => '@frontend/web/css/malipo.css',
+        'cssInline' => '.kv-heading-1{font-size:18px}', 
+        'options' => ['title' => 'Medical Store Sales Report'],
+        'methods' => [ 
+            // 'SetHeader'=>['SALES REPORT'], 
+            'SetFooter'=>['{PAGENO}'],
+        ]
+    ]);
+    return $pdf->render();
+}
+
+public function actionPrint($sale_id)
+ {
+    // get your HTML raw content without any layouts or scripts
+    $sales=Sales::findone([$sale_id]);
+    $content= $this->renderPartial('salesreport', ['sales'=>$sales]);
+    // setup kartik\mpdf\Pdf component
+    $pdf = new Pdf([
+        'mode' => Pdf::MODE_CORE, 
+        'format' => Pdf::FORMAT_A4 ,
+        'orientation' => Pdf::ORIENT_LANDSCAPE, 
+        'destination' => Pdf::DEST_BROWSER, 
+        'content' => $content,
+        'cssFile' => '@frontend/web/css/malipo.css',
+        'cssInline' => '.kv-heading-1{font-size:18px}', 
+        'options' => ['title' => 'Medical Store Sales Report'],
+        'methods' => [ 
+            'SetFooter'=>['{PAGENO}'],
+        ]
+    ]);
+    
+    // return the pdf output as per the destination setting
+    return $pdf->render(); 
+}
 public function actionManageCat()
 {
 	$model = Categories::find()->all();
@@ -330,37 +368,35 @@ public function actionUpdateCat($cat_id)
         return $this->render('updatecategory', ['cat'=>$cat]);
     
 }
-
-
-
-
-
-
+public function actionAddSeller()
+{
+    $model = new SignupForm();   
+    $seller =new Seller(); 
+    if ($model->load(Yii::$app->request->post()) && $model->signup()) 
+    {
+  $path = Yii::getAlias('@frontend') .'/web/photo/';
+        $model->pic = UploadedFile::getInstance($model, 'pic');
+        if ($model->pic && $model->validate()) {
+            $model->pic->saveAs($path . $model->pic->baseName . '.' . $model->pic->extension);
+        }
+        $seller->pic= $model->pic->baseName . '.' . $model->pic->extension;
+        $seller->log_id = User::findone(['email'=>$model->email])->id;
+        $seller->mobile=$model->mobile;
+        $seller->save();
+        Yii::$app->session->setFlash('success', 'User has been Added Successfully');
+        return $this->goHome();
+    }   return $this->render('adduser', [
+        'model' => $model,'seller'=>$seller
+    ]);
+}
 public function actionLogin()
     {
-		
-        // if (!Yii::$app->user->isGuest) {
-        //     return $this->goHome();
-        // }
-
         $this->layout = 'blank';
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login())
          {
 			$this->layout = 'main';
-        //     $session =Yii::$app->session;
-        // $session['login']=$model->username;
-        $id=\Yii::$app->user->identity->id;
-        
-       
-       if(Admin::findone(['log_id'=>$id]))
-        return $this->goHome();
-     
-        if( Seller::findone(['log_id'=>$id]))
-        {
             return $this->goHome();
-        
-         }
         }
         $model->password = '';
 	
@@ -368,53 +404,14 @@ public function actionLogin()
             'model' => $model,
         ]);
     }
+
     public function actionLogout()
     {
+       
         Yii::$app->user->logout();
-		// $this->layout = 'blank';
+         $this->layout = 'blank';
         return $this->goHome();
-		// $model = new LoginForm();
-		// return $this->render('login', [
-        //     'model' => $model,
-        // ]);
     }
 
-
-    // public function actionAddCat(){
-
-    //     $model = new Categories();
-    //     $uploadPath = Yii::getAlias('@frontend') .'/photo/';
-    
-    //     if ($model->load(Yii::$app->request->post()))
-    //      {
-    //         $file = \yii\web\UploadedFile::getInstanceByName('cat_pic');
-    //       $original_name = $file->baseName;  
-    //       $newFileName = \Yii::$app->security
-    //                         ->generateRandomString().'.'.$file->extension;
-    //        // you can write save code here before uploading.
-    //         if ($file->saveAs($uploadPath . '/' . $newFileName)) {
-    //             $model->cat_pic = $newFileName;
-    //             // $model->original_name = $original_name;
-    //             $model->user_id=yii::$app->user->getId();
-    //             if($model->save(false))
-    //             {
-    //                 echo \yii\helpers\Json::encode($file);
-    //                 Yii::$app->session->setFlash('success', 'Drug Category been Added Successfully');
-    //                 return $this->goHome();
-    //             }
-    //             else{
-    //                 echo \yii\helpers\Json::encode($model->getErrors());
-    //                 Yii::$app->session->setFlash('failure', 'Failure');
-    //                 return $this->goBack();
-    //             }
-    
-    //         }
-    //     }
-    //     else {
-    //         return $this->render('addcategory', ['model'=>$model]);
-    //     }
-    
-    //     return false;
-    // }
 }
 ?>
