@@ -21,34 +21,35 @@ use yii\web\UploadedFile;
 use Yii;
 class MiamalaController extends Controller
 {
-	// public function behaviors()
-    // {
-    //     return [
-    //         'access' => [
-    //             'class' => AccessControl::className(),
-    //             'rules' => [
-    //                 [
-    //                     'actions' => ['index','login','add-user','inventeries','profile','reports','account'],
-    //                     'allow' => true,
-    //                 ],
+	public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        
+                    ],
 
-    //                 //rule2
-    //                 [
-    //                     'actions' => ['logout', 'login'],
-    //                     'allow' => true,
-    //                     'roles' => ['@'],
-    //                 ],
-    //                 //rule3
-    //             ],
-    //         ],
-    //         'verbs' => [
-    //             'class' => VerbFilter::className(),
-    //             'actions' => [
-    //                 'logout' => ['post'],
-    //             ],
-    //         ],
-    //     ];
-    // }
+                    //rule2
+                    [
+                        'actions' => ['logout','index','add-drug','home','add-user','inventeries','profile','reports','account'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    //rule3
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -353,14 +354,14 @@ public function actionLogin()
         $id=\Yii::$app->user->identity->id;
         
        
-       if(Admin::findone(['log_id'=>$id]))
-        return $this->goHome();
+    //    if(Admin::findone(['log_id'=>$id]))
+    //     return $this->goHome();
      
-        if( Seller::findone(['log_id'=>$id]))
-        {
+    //     if( Seller::findone(['log_id'=>$id]))
+    //     {
             return $this->goHome();
         
-         }
+    //      }
         }
         $model->password = '';
 	
@@ -369,9 +370,9 @@ public function actionLogin()
         ]);
     }
     public function actionLogout()
-    {
+    {$this->layout = 'blank';
         Yii::$app->user->logout();
-		// $this->layout = 'blank';
+		
         return $this->goHome();
 		// $model = new LoginForm();
 		// return $this->render('login', [

@@ -87,7 +87,7 @@ AppAsset::register($this);
     <div style="background:#1E282C;color: white;padding: 13px 17px;border-left: 3px solid #3C8DBC;"><span><i class="fa fa-dashboard fa-fw"></i> Dashboard</span></div>
     <div class="item">
       <ul class="nostyle zero">
-        <li style="color: white"><i class="fa fa-home fa-fw text-primary"></i> <?= Html:: a("Home", Yii::$app->homeUrl,['class' => 'btn btn-primary half-5']) ?></li>
+        <li style="color: white"><i class="fa fa-home fa-fw text-primary"></i> <?= Html:: a("Home", ['/miamala/home'],['class' => 'btn btn-primary half-5']) ?></li>
 
         <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Drugs",['/miamala/drugs'],['class' => 'btn btn-primary half-5']) ?></li>
         <?php 
