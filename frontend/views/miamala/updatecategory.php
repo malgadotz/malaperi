@@ -18,7 +18,7 @@ $form = ActiveForm::begin([
         <li class="active"><?=$cat->cat_name;?></li>
     </ol>
    <div class="card  mauto half">
-    <div class="card-header bg-primary">
+    <div class="card-header bg-info">
     <h3 class="text-center btn-block"><i class="fa fa-user-plus text-white"></i> Add New Category</h3>
     </div>
     <div class="card-body">
@@ -27,7 +27,7 @@ $form = ActiveForm::begin([
 
 <?= $form->field($cat, 'cat_pic')->fileInput(['prompt'=>$cat->cat_pic])?>
                 <div class="form-group">
-                    <?= Html::submitButton('Update Drug Category', ['class' => 'btn btn-primary btn-block btn-flat '  , 'name' => 'contact-button']) ?>
+                    <?= Html::submitButton('Update Drug Category', ['class' => 'btn btn-success btn-block btn-flat '  , 'name' => 'contact-button']) ?>
                 </div>
 
             <?php ActiveForm::end(); ?>

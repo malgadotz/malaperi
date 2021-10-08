@@ -18,7 +18,7 @@ return [
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true], 'loginUrl' => [ 'miamala/login' ],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -33,19 +33,35 @@ return [
                 ],
             ],
         ],
+<<<<<<< HEAD
         // 'errorHandler' => [
         //     'errorAction' => 'miamala/error',
         // ],
         
         'urlManager' => [
             'enablePrettyUrl' => true,
+=======
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
+        
+        'urlManager' => ['enablePrettyUrl' => true,
+>>>>>>> 8bd6ef6268d29e5b762016e5ff8050192de06852
             'showScriptName' => false,
+            'enableStrictParsing' => false,
             'rules' => [
+                    'login'=>'miamala/login',
+                // ...
             ],
         ],
         
     ],
     'params' => $params,
     // 'controllerNamespace' =>'frontend/controllers',
+<<<<<<< HEAD
     'defaultRoute'=>'miamala/login',
 ];
+=======
+    'defaultRoute'=>'miamala/index',
+];
+>>>>>>> 8bd6ef6268d29e5b762016e5ff8050192de06852

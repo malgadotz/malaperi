@@ -19,7 +19,7 @@ $form = ActiveForm::begin([
         <li class="active">Update Profile Picture</li>
     </ol>
    <div class="card  mauto half">
-    <div class="card-header bg-primary">
+    <div class="card-header bg-info">
     <h3 class="text-center btn-block"><i class="fa fa-user-plus text-white"></i> Update Profile Picture</h3>
     </div>
     <div class="card-body">
@@ -28,9 +28,8 @@ $form = ActiveForm::begin([
     <?php endif;?>
 <?= $form->field($model, 'pic')->fileInput()?>
                 <div class="form-group">
-                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat '  , 'name' => 'contact-button']) ?>
+                    <?= Html::submitButton('Confirm Change', ['class' => 'btn btn-success btn-block btn-flat '  , 'name' => 'contact-button'])?>
                 </div>
-
             <?php ActiveForm::end(); ?>
             </div>
             </div>

@@ -26,6 +26,15 @@ else
         <li><a href=<?=Yii::$app->homeUrl;?>><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">Drugs</li>
     </ol>
+  </div>
+  <div class="content2">
+   <span style="font-size: 16pt;color: #333333">Drugs Inventory</span>
+        <?= Html:: a(' Generate Invoice'
+          ,['/miamala/invoice'],['class' => ' btn fa fa-print fa-lg text-white btn-success pull-right'])?>         <?php 
+if ($userwho == 'admin'):?>
+    <?= Html:: a("  Add Drug",['/miamala/add-drug'],['class' => 'fa btn fa-plus-square fa-lg text-white btn-info pull-right']) ?>
+<?php endif;?>
+    </div>
   <div class="tableBox" >
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">
       <thead>
@@ -36,13 +45,14 @@ else
         <th>Category</th>
         <th>Expire Date</th>
         <th>Description</th>
+        <th>Status</th>
         <th>Action</th>
-
       </thead>
      <tbody>
      <?php 
      $a=1;
      foreach($model as $model): ?>
+      <?php $status='available';?>
           <tr>
             <td><?php echo $a++;?></td>
             <td><?php echo $model->drug_name;?></td>
@@ -51,19 +61,40 @@ else
             <td><?php echo Categories::findone(['cat_id'=>$model->cat_id])->cat_name;?></td>
             <td><?php echo $model->expire?></td>
             <td><?php echo $model->description?></td>
+            <?php
+            $expire = date_create($model->expire);
+            $today = date_create(date('Y-m-d'));
+            $diff = date_diff($expire,$today);
+            $total=$diff->format("%a");
+            if( $expire< $today){
+              $status='expired';?>
+                  <td class="bg-danger text-white"> ExPired             
+                <?php }
+                else if ($total < 20) {?>
+              <td class="bg-warning text-white">
+                <?php    echo $diff->format("%a"). ' Days To expire';?></td>  
+               <?php }else{?>
+              <td class="bg-info text-white">
+              <?php    echo $diff->format("%a"). ' Days To expire';}?></td>
               <?php
               if($userwho == 'admin'):
-              ?>
-            
-            <td colspan="center"><i class="fa fa-trash fa-lg text-danger"></i><?= Html:: a("Delete",['/miamala/deletedrug', 'inv_id'=>$model->inv_id],['class' => 'btn btn-danger btn-xs']) ?></td>
-            <td colspan="center"><i class="fa fa-edit fa-lg text-danger"></i><?= Html:: a("Update",['/miamala/update-drug', 'drug_id'=>$model->inv_id],['class' => 'btn btn-primary btn-xs']) ?></td>
-            <?php endif;
-            if($userwho == 'seller'):
-              ?>
-            
-            <td colspan="center"><i class="fa fa-edit fa-lg text-white"></i><?= Html:: a("Sell Item",['/miamala/sell-drug', 'drug_id'=>$model->inv_id],['class' => 'btn btn-primary btn-xs']) ?></td>
+              ?><td colspan="center">
+            <?= Html:: a("",['/miamala/update-drug', 'drug_id'=>$model->inv_id],['class' => 'fa fa-edit fa-lg  text-primary btn-sm']) ?>
+              <?= Html:: a("",['/miamala/delete-drug', 'inv_id'=>$model->inv_id],['class' => 'text-danger fa fa-trash fa-lg btn-sm']) ?>
+            </td>
             <?php endif;?>
-            
+            <?php if($userwho == 'seller'):?>
+              <td colspan="center">
+            <?php if($status == 'expired'):?>
+              <label class="btn fa fa-times fa-lg text-white btn-info bt-xs"> No stock</label>
+             <?php else:?>
+            <?= Html:: a('  Sell Item'   
+          ,['/miamala/sell-drug', 'drug_id'=>$model->inv_id], ['class' => ' btn fa fa-check-square fa-lg text-white btn-primary bt-xs'])?>
+
+             
+             <?php endif;?>
+             </td>
+            <?php endif;?>
 
           </tr>
           <?php endforeach; ?>  

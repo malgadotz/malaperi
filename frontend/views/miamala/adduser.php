@@ -19,7 +19,7 @@ $form=ActiveForm::begin([
         <li class="active">Register New Seller</li>
     </ol>
    <div class="card  mauto half">
-    <div class="card-header bg-primary">
+    <div class="modal-header bg-info">
     <h3 class="text-center btn-block"><i class="fa fa-user-plus text-white"></i> Register New Seller</h3>
     </div>
     <div class="card-body">
@@ -28,11 +28,14 @@ $form=ActiveForm::begin([
 
 <?= $form->field($model, 'email') ?>
 
-<?= $form->field($model, 'password')->passwordInput() ?>
+<?= $form->field($model, 'password')->passwordInput()?>
+<?= $form->field($model, 'mobile')->textInput(['prompt'=>'255'])?>
+    
+<?= $form->field($model, 'pic')->fileInput(['class'=>'form-control fa fa-upload fa-lg'])?>
 
               
                 <div class="form-group">
-                    <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-block btn-flat '  , 'name' => 'contact-button']) ?>
+                    <?= Html::submitButton('Register Seller', ['class' => 'btn btn-success btn-block btn-flat ']) ?>
                 </div>
 
             <?php ActiveForm::end(); ?>

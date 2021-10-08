@@ -10,6 +10,13 @@ use yii\helpers\Html;
         <li><a href=<?=Yii::$app->homeUrl;?>><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">Reports</li>
     </ol>
+  </div>
+  <div class="content2">
+   <span style="font-size: 16pt;color: #333333">Sales Reports </span>
+        <?= Html:: a(' Sales Report'
+          ,['/miamala/sales-report'],['class' => ' btn fa fa-print fa-lg text-white btn-success pull-right'])?>
+    </div>
+
   <div class="tableBox" >
     <table id="dataTable" class="table table-bordered table-striped" style="z-index: -1">
       <thead>
@@ -33,7 +40,7 @@ use yii\helpers\Html;
             <td><?php echo User::findone(['id'=>Seller::findone(['id'=> $report->seller_id])->log_id])->username;?></td>
             <td><?php echo $report->date;?></td>
              <td>
-              <i class="fa fa-print fa-lg text-dark"></i><?= Html:: a("print",['/miamala/profile'],['class' => 'btn btn-info btn-xs']) ?>
+              <?= Html:: a(" print",['/miamala/print' , 'sale_id'=>$report->sales_id],['class' => 'btn btn-info btn-xs fa fa-print fa-lg']) ?>
             </td>
           </tr>
           <?php endforeach; ?>  
