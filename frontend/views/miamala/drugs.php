@@ -49,6 +49,7 @@ if ($isAdmin):?>
      $amount=0;
      $quantity=0;
      foreach($model as $model): ?>
+      <?php $status='available';?>
           <tr>
             <td><?php echo $a++;?></td>
             <td><?php echo $model->drug_name;?></td>

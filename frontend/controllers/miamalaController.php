@@ -26,14 +26,31 @@ use \Mpdf\Mpdf;
 use Yii;
 class MiamalaController extends Controller
 {
+
     public $layout = 'miamalalayout';
     public function behaviors()
+
+	public function behaviors()
+
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
+
+                        'actions' => ['login'],
+                        'allow' => true,
+                        
+                    ],
+
+                    //rule2
+                    [
+                        'actions' => ['logout','index','add-drug','home','add-user','inventeries','profile','reports','account'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    //rule3
                         'actions' => ['login', 'error'],
                         'allow' => true,
                         'roles' => ['?'],
@@ -56,12 +73,15 @@ class MiamalaController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    // 'logout' => ['post'],
+
+                    'logout' => ['post'],
+
                 ],
             ],
         ];
@@ -211,7 +231,6 @@ public function actionSellDrug($drug_id)
         }
         else if ($model->amount == $drug->price * $model->quantity)
         {
-
         $drug->save();
         $model->save();
         // $model->cat_idgetCat()
@@ -463,33 +482,14 @@ public function actionLogin()
     }
 
     public function actionLogout()
-    {
-       
+
+    {$this->layout = 'blank';
         Yii::$app->user->logout();
          $this->layout = 'blank';
         return $this->goHome();
     }
-
-public function actionUploadFaili()
-{
-	$models=new Matokeo();
-    
-    if($models->load(Yii::$app->request->post()))
-    {
-        $models->faili = UploadedFile::getInstance($models, 'faili');
-        if ($models->faili && $models->validate()) 
-        {
-        // $models->faili->saveAs($path . $models->faili->baseName . '.' . $models->faili->extension);
-			 $path = '/photo/';
-             $models->faili->saveAs('photo/' . $models->name . '.' . $models->faili->extension);
-        }
-        $models->faili= $models->name . '.' . $models->faili->extension;
-        $models->save();
-            Yii::$app->session->setFlash('success', 'File Uploaded Succesfully');
-            return $this->goHome();
     }
-        return $this->render('uploadfaili', ['models'=>$models]);   
-}
+
 }
 ?>
 

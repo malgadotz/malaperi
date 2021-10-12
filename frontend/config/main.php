@@ -33,11 +33,18 @@ return [
                 ],
             ],
         ],
+
+        // 'errorHandler' => [
+        //     'errorAction' => 'miamala/error',
+        // ],
+        
+
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
         
         'urlManager' => ['enablePrettyUrl' => true,
+
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
@@ -49,5 +56,6 @@ return [
     ],
     'params' => $params,
     // 'controllerNamespace' =>'frontend/controllers',
+
     'defaultRoute'=>'miamala/index',
 ];

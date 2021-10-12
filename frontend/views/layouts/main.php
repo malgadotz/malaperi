@@ -81,11 +81,20 @@ AppAsset::register($this);
     <div style="background:#1E282C;color: white;padding: 13px 17px;border-left: 3px solid #3C8DBC;"><span><i class="fa fa-dashboard fa-fw"></i> Dashboard</span></div>
     <div class="item">
       <ul class="nostyle zero">
-        <li class="btn-block"> <?= Html:: a("  Category",Yii::$app->homeUrl,['class' => 'btn btn-primary btn-xs fa fa-home half-5']) ?></li>
 
-       <li class="btn-block btn-flat"><?= Html:: a("  Drugs",['/miamala/drugs'],['class' => 'btn btn-primary btn-xs fa fa-database half-5 ']) ?></li>      
+     
+ 
+     
+        <li style="color: white"><i class="fa fa-home fa-fw text-primary"></i> <?= Html:: a("Home", ['/miamala/home'],['class' => 'btn btn-primary half-5']) ?></li>
+
+        <li><i class="fa fa-database fa-fw text-danger"></i> <?= Html:: a("Drugs",['/miamala/drugs'],['class' => 'btn btn-primary half-5']) ?></li>
+        <?php 
+if ($userwho == 'admin'):?>
+       <li><i class="fa fa-plus-square fa-fw text-warning"></i> <?= Html:: a("Add New Drug",['/miamala/add-drug'],['class' => 'btn btn-primary half-5']) ?></li>
+<!--         <a href="newsell"><li><i class="fa fa-circle-o fa-fw"></i> New Sell</li></a> -->
+<?php endif;?>      
        <li class="btn-block">  <?= Html:: a("  Sales",['/miamala/reports'],['class' => 'btn btn-primary mauto fa fa-folder-open half-5']) ?></li>
-	   <li class="btn-block">  <?= Html:: a("  Matokeo",['/miamala/upload-faili'],['class' => 'btn btn-primary mauto fa fa-plus-square half-5']) ?></li>
+
       </ul>
     </div>
   </div>
@@ -98,7 +107,7 @@ AppAsset::register($this);
        <li class="btn-block"> <?= Html:: a(" Profile Settings",['/miamala/profile'],['class' => 'btn btn-primary fa fa-user-circle-o text-gado half-5']) ?></li>
         <li class="btn-block"><?= Html:: a(" Account Settings",['/miamala/account'],['class' => 'fa fa-lock btn btn-primary half-5']) ?></li>
         <li class="btn-block"> <?= Html:: a(" Sign Out",['miamala/logout'],['class' => 'btn fa fa-sign-out btn-primary half-5','data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Are you sure you want to Sign Out?',
                 'method' => 'post',
             ],
         ]) ?></li>
