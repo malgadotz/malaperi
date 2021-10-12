@@ -26,31 +26,14 @@ use \Mpdf\Mpdf;
 use Yii;
 class MiamalaController extends Controller
 {
-
     public $layout = 'miamalalayout';
     public function behaviors()
-
-	public function behaviors()
-
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-
-                        'actions' => ['login'],
-                        'allow' => true,
-                        
-                    ],
-
-                    //rule2
-                    [
-                        'actions' => ['logout','index','add-drug','home','add-user','inventeries','profile','reports','account'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    //rule3
                         'actions' => ['login', 'error'],
                         'allow' => true,
                         'roles' => ['?'],
@@ -73,15 +56,12 @@ class MiamalaController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-
-                    'logout' => ['post'],
-
+                    // 'logout' => ['post'],
                 ],
             ],
         ];
@@ -132,14 +112,14 @@ public function actionProfile()
         
     }
 
-	return $this->render('profile',['model' => $model,
+    return $this->render('profile',['model' => $model,
         ]);
 }
 
 public function actionAccount()
 {
     $id=\Yii::$app->user->identity->id;
-	$model=new ResetPassword();
+    $model=new ResetPassword();
     
     $new=User::findone(['id'=> $id]);
     $model->name=$new->username;
@@ -159,20 +139,20 @@ public function actionAccount()
         $model->addError("oldpassword", "Old Password Incorrect");
     }
     }
-	return $this->render('account', ['model'=>$model, 'new'=>$new]);
+    return $this->render('account', ['model'=>$model, 'new'=>$new]);
 }
 public function actionDrugs()
 {
-	$model=Drugs::find()->all();
+    $model=Drugs::find()->all();
     $admin=Admin::find()->all();
     $usernow=User::findone(['id'=> yii::$app->user->getId()]);
-	return $this->render('drugs', ['model'=>$model, 'admin'=>$admin, 'usernow'=>$usernow]);
+    return $this->render('drugs', ['model'=>$model, 'admin'=>$admin, 'usernow'=>$usernow]);
 }
 public function actionDrugsCategory($drug_id)
 {
-	$model=Drugs::findall(['cat_id'=>$drug_id]);
+    $model=Drugs::findall(['cat_id'=>$drug_id]);
     $cat=Categories::findone(['cat_id'=>$drug_id]);
-	return $this->render('categories', ['model'=>$model, 'cat'=>$cat]);
+    return $this->render('categories', ['model'=>$model, 'cat'=>$cat]);
 }
 public function actionAddDrug()
 {
@@ -252,7 +232,6 @@ if($model = Drugs::findone($inv_id)->delete())
     return $this->redirect('drugs');
 }
 
-
 }
 public function actionDeleteCat($cat_id)
 {
@@ -265,10 +244,9 @@ if($model = Categories::findone($cat_id)->delete())
 
 public function actionReports()
 {
-	$report=Sales::find()->all();
-	return $this->render('reports', ['report'=>$report]);
+    $report=Sales::find()->all();
+    return $this->render('reports', ['report'=>$report]);
 }
-
 public function actionSalesReport()
 {
     $sales=Sales::find()->all();
@@ -371,13 +349,13 @@ public function actionPrint($sale_id)
 }
 public function actionManageCat()
 {
-	$model = Categories::find()->all();
+    $model = Categories::find()->all();
     $drug = Drugs::find()->all();
-	return $this->render('managecat', ['model'=>$model, 'drug'=>$drug]);
+    return $this->render('managecat', ['model'=>$model, 'drug'=>$drug]);
 }
 public function actionAddCat()
 {
-	$model=new Categories();
+    $model=new Categories();
     $admin=Admin::findone(['log_id'=>\yii::$app->user->identity->id])->log_id;
     if($model->load(Yii::$app->request->post()))
     {
@@ -471,25 +449,44 @@ public function actionLogin()
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login())
          {
-			$this->layout = 'main';
+            $this->layout = 'main';
             return $this->goHome();
         }
         $model->password = '';
-	
+    
         return $this->render('login', [
             'model' => $model,
         ]);
     }
 
     public function actionLogout()
-
-    {$this->layout = 'blank';
+    {
+       
         Yii::$app->user->logout();
          $this->layout = 'blank';
         return $this->goHome();
     }
-    }
 
+public function actionUploadFaili()
+{
+    $models=new Matokeo();
+    
+    if($models->load(Yii::$app->request->post()))
+    {
+        $models->faili = UploadedFile::getInstance($models, 'faili');
+        if ($models->faili && $models->validate()) 
+        {
+        // $models->faili->saveAs($path . $models->faili->baseName . '.' . $models->faili->extension);
+             $path = '/photo/';
+             $models->faili->saveAs('photo/' . $models->name . '.' . $models->faili->extension);
+        }
+        $models->faili= $models->name . '.' . $models->faili->extension;
+        $models->save();
+            Yii::$app->session->setFlash('success', 'File Uploaded Succesfully');
+            return $this->goHome();
+    }
+        return $this->render('uploadfaili', ['models'=>$models]);   
+}
 }
 ?>
 

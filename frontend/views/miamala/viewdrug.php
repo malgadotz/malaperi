@@ -57,6 +57,14 @@ if ($isAdmin):?>
         <td>Description</td>
         <td><?php echo $drug->description;?></td>
     </tr>
+     <tr>
+        <td>Mobile1</td>
+        <td>69636239792297</td>
+    </tr>
+     <tr>
+        <td>Mobile2</td>
+        <td>90900987814647</td>
+    </tr>
      
           <?php endforeach; ?>  
     <tr class="bold text-black">
