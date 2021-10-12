@@ -10,7 +10,9 @@ class Sales extends ActiveRecord{
     //private $id;
     private $sales_id;
     private $quantity;
+    
     private $amount;
+    private $date;
     private $drug_name;
     private $seller_id;
     
@@ -18,7 +20,10 @@ class Sales extends ActiveRecord{
 
     public function rules(){
         return[
-            [['quantity', 'amount','seller_id','drug_id'],'required']
+            [['quantity', 'seller_id','drug_id',],'required'],
+            [['quantity','amount'],'integer' ,'message'=>'Only Integers Are Allowed'],
+            [['quantity'],'integer','min'=>1 ,'message'=>'Enter Valid Quantity Please!'],
+           
         ];
     }
     public function attributeLabels()
@@ -27,4 +32,5 @@ class Sales extends ActiveRecord{
             'quantity' => 'Quantity To Sell' ,
         ];
     }
+    
 }

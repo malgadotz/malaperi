@@ -44,7 +44,7 @@ class Admin extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pic' => 'Pic',
+            'pic' => 'Admin\'s Profile Picture',
             'log_id' => 'Log ID',
         ];
     }
